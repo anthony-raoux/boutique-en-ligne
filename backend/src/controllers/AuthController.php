@@ -1,34 +1,38 @@
 <?php
-require_once '../models/User.php';
+require_once 'BaseController.php';
 
-class AuthController {
+class AuthController extends BaseController {
 
     public function register($nom, $prenom, $email, $mot_de_passe, $adresse, $telephone) {
-        $user = new User();
-        $user->nom = $nom;
-        $user->prenom = $prenom;
-        $user->email = $email;
-        $user->mot_de_passe = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-        $user->adresse = $adresse;
-        $user->telephone = $telephone;
+        $query = "INSERT INTO Utilisateur (nom, prenom, email, mot_de_passe, adresse, telephone) VALUES (:nom, :prenom, :email, :mot_de_passe, :adresse, :telephone)";
+        $stmt = $this->db->prepare($query);
 
-        if ($user->save()) {
-            return ['success' => true];
+        $stmt->bindParam(':nom', $nom);
+        $stmt->bindParam(':prenom', $prenom);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':mot_de_passe', password_hash($mot_de_passe, PASSWORD_DEFAULT));
+        $stmt->bindParam(':adresse', $adresse);
+        $stmt->bindParam(':telephone', $telephone);
+
+        if($stmt->execute()) {
+            return ['status' => 'success', 'message' => 'User registered successfully'];
         } else {
-            return ['success' => false, 'message' => 'Échec de l\'inscription'];
+            return ['status' => 'error', 'message' => 'User registration failed'];
         }
     }
 
     public function login($email, $mot_de_passe) {
-        $user = User::findByEmail($email);
+        $query = "SELECT * FROM Utilisateur WHERE email = :email";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
 
-        if ($user && password_verify($mot_de_passe, $user->mot_de_passe)) {
-            // Gérer la connexion (par exemple, générer un token ou une session)
-            return ['success' => true];
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
+            return ['status' => 'success', 'message' => 'Login successful'];
         } else {
-            return ['success' => false, 'message' => 'Email ou mot de passe incorrect'];
+            return ['status' => 'error', 'message' => 'Invalid email or password'];
         }
     }
 }
 ?>
-

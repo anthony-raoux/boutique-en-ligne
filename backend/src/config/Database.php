@@ -2,8 +2,8 @@
 class Database {
     private $host = 'localhost';
     private $db_name = 'boutique_en_ligne';
-    private $username = 'utilisateur';
-    private $password = 'mot_de_passe';
+    private $username = 'root';
+    private $password = '';
     private $conn;
 
     public function connect() {
