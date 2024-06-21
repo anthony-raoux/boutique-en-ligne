@@ -1,12 +1,16 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id'])) {
-    header("Location: profile.php");
+if (isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) {
+    // Rediriger vers la page appropriée si déjà connecté
+    if (isset($_SESSION['user_id'])) {
+        header("Location: profile.php");
+    } elseif (isset($_SESSION['admin_id'])) {
+        header("Location: dashboard.php");
+    }
     exit();
 }
 
-require_once __DIR__ . '/controllers/BaseController.php';
 require_once __DIR__ . '/controllers/AuthController.php';
 $authController = new AuthController();
 
@@ -27,22 +31,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($emailError) && empty($passwordError)) {
-        $loginResult = $authController->login($email, $password);
+        // Essayer de se connecter en tant qu'administrateur
+        $loginResult = $authController->loginAdmin($email, $password);
+
+        if ($loginResult['success']) {
+            $_SESSION['admin_id'] = $loginResult['admin_id'];
+            header("Location: dashboard.php");
+            exit();
+        }
+
+        // Si échec, essayer de se connecter en tant qu'utilisateur normal
+        $loginResult = $authController->loginUser($email, $password);
 
         if ($loginResult['success']) {
             $_SESSION['user_id'] = $loginResult['user_id'];
             header("Location: profile.php");
             exit();
-        } else {
-            $loginError = $loginResult['error'];
         }
-    }
-}
 
-$registerSuccessMessage = '';
-if (isset($_SESSION['register_success'])) {
-    $registerSuccessMessage = 'Votre compte a bien été créé !';
-    unset($_SESSION['register_success']);
+        // Si les deux échouent, afficher un message d'erreur
+        $loginError = $loginResult['error'];
+    }
 }
 ?>
 
@@ -62,10 +71,6 @@ if (isset($_SESSION['register_success'])) {
 
     <div class="content">
         <h1>Login</h1>
-
-        <?php if (!empty($registerSuccessMessage)) : ?>
-            <div class="success-message"><?php echo $registerSuccessMessage; ?></div>
-        <?php endif; ?>
 
         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
             <div class="form-group">

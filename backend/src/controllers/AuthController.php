@@ -27,7 +27,7 @@ class AuthController extends BaseController {
         }
     }
 
-    public function login($email, $mot_de_passe) {
+    public function loginUser($email, $mot_de_passe) {
         try {
             $query = "SELECT * FROM Utilisateur WHERE email = :email";
             $stmt = $this->db->prepare($query);
@@ -99,6 +99,24 @@ class AuthController extends BaseController {
         }
     }
 
+    // Authentification pour les administrateurs
+    public function loginAdmin($email, $mot_de_passe) {
+        try {
+            $query = "SELECT * FROM Administrateur WHERE email = :email";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+
+            $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($admin && password_verify($mot_de_passe, $admin['mot_de_passe'])) {
+                return ['success' => true, 'admin_id' => $admin['id_administrateur'], 'role' => 'admin'];
+            } else {
+                return ['success' => false, 'error' => 'Invalid email or password'];
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
 
     public function getUserById($id_utilisateur) {
         try {
