@@ -9,25 +9,25 @@ require_once '../controllers/AuthController.php';
 
 $authController = new AuthController();
 
-// Route pour l'inscription
-// Exemple de gestion des erreurs dans votre script PHP
+// Inside authRoutes.php for registration endpoint
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'register') {
     try {
         $data = json_decode(file_get_contents('php://input'), true);
-        
-        // Validation et traitement des données
+
+        // Validate and process registration
         $result = $authController->register($data['nom'], $data['prenom'], $data['email'], $data['mot_de_passe'], $data['adresse'], $data['telephone']);
 
-        // Réussite : renvoyer une réponse JSON avec les données enregistrées
+        // Respond with JSON success message
         header('Content-Type: application/json');
         echo json_encode(['success' => true, 'message' => 'Utilisateur enregistré avec succès']);
 
     } catch (Exception $e) {
-        // Erreur : renvoyer une réponse JSON avec l'erreur
+        // Handle exceptions and errors
         header('Content-Type: application/json');
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }
+
 
 
 // Route pour la connexion

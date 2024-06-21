@@ -3,35 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription / Connexion</title>
+    <title>Register</title>
+    <link rel="stylesheet" href="../assets/styles/main.css">
 </head>
 <body>
-    <h2>Inscription / Connexion</h2>
-
-    <!-- Formulaire d'inscription -->
     <form id="registerForm">
-        <h3>Inscription</h3>
-        <input type="text" id="nom" name="nom" placeholder="Nom" required><br>
-        <input type="text" id="prenom" name="prenom" placeholder="Prénom" required><br>
-        <input type="email" id="email" name="email" placeholder="Email" required><br>
-        <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Mot de passe" required><br>
-        <input type="text" id="adresse" name="adresse" placeholder="Adresse" required><br>
-        <input type="tel" id="telephone" name="telephone" placeholder="Téléphone"><br>
+        <input type="text" name="nom" placeholder="Nom" required>
+        <input type="text" name="prenom" placeholder="Prénom" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="mot_de_passe" placeholder="Mot de passe" required>
+        <textarea name="adresse" placeholder="Adresse" required></textarea>
+        <input type="text" name="telephone" placeholder="Téléphone">
+        <div id="messageContainer"></div> 
+    
         <button type="submit">S'inscrire</button>
     </form>
-
-    <!-- Formulaire de connexion -->
-    <form id="loginForm">
-        <h3>Connexion</h3>
-        <input type="email" id="loginEmail" name="loginEmail" placeholder="Email" required><br>
-        <input type="password" id="loginPassword" name="loginPassword" placeholder="Mot de passe" required><br>
-        <button type="submit">Se connecter</button>
-    </form>
-
-    <!-- Container pour afficher les messages d'erreur ou de succès -->
-    <div id="messageContainer"></div>
-
-    <!-- Script JavaScript -->
-    <script src="register.js"></script>
+    <script src="../assets/scripts/register.js" defer></script>
 </body>
 </html>

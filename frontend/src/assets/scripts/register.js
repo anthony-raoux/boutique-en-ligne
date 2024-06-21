@@ -24,21 +24,23 @@ document.getElementById('registerForm').addEventListener('submit', async functio
             throw new Error('Erreur HTTP: ' + response.status);
         }
 
-        // Analyser la réponse JSON uniquement si le statut est OK
         const result = await response.json();
+        
         if (result.success) {
             console.log('Utilisateur enregistré avec succès:', result.message);
-            // Afficher le message de confirmation
-            const messageContainer = document.getElementById('messageContainer');
-            messageContainer.innerHTML = '<p>Inscription réussie !</p>';
-            // Vous pouvez également rediriger l'utilisateur vers une autre page ici si nécessaire
+            // Affichez un message de succès à l'utilisateur
+            alert('Votre compte a bien été créé !');
+            // Redirigez l'utilisateur vers une autre page, par exemple :
+            // window.location.href = '/boutique_en_ligne/frontend/welcome.php';
         } else {
             console.error('Erreur lors de l\'inscription:', result.error);
-            // Affichage d'un message d'erreur si nécessaire
+            // Affichez un message d'erreur à l'utilisateur si nécessaire
+            alert('Erreur lors de l\'inscription: ' + result.error);
         }
 
     } catch (error) {
         console.error('Erreur lors de la requête fetch:', error);
-        // Gérer d'autres erreurs, par exemple si la requête échoue complètement
+        // Affichez un message d'erreur générique à l'utilisateur
+        alert('Erreur lors de la requête fetch, veuillez réessayer.');
     }
 });
