@@ -1,5 +1,5 @@
 <?php
-require_once 'BaseController.php';
+require_once __DIR__ . '/BaseController.php';
 
 class AuthController extends BaseController {
 
@@ -7,30 +7,25 @@ class AuthController extends BaseController {
         try {
             $query = "INSERT INTO Utilisateur (nom, prenom, email, mot_de_passe, adresse, telephone) VALUES (:nom, :prenom, :email, :mot_de_passe, :adresse, :telephone)";
             $stmt = $this->db->prepare($query);
-    
-            // Utilisation de bindParam pour lier les valeurs
+
+            $hashed_password = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+
             $stmt->bindParam(':nom', $nom);
             $stmt->bindParam(':prenom', $prenom);
             $stmt->bindParam(':email', $email);
-            $hashed_password = password_hash($mot_de_passe, PASSWORD_DEFAULT);
             $stmt->bindParam(':mot_de_passe', $hashed_password);
             $stmt->bindParam(':adresse', $adresse);
             $stmt->bindParam(':telephone', $telephone);
-    
-            // Exécution de la requête
+
             if ($stmt->execute()) {
-                // Succès de l'inscription
                 return ['success' => true, 'message' => 'User registered successfully'];
             } else {
-                // Échec de l'inscription
-                return ['success' => false, 'error' => 'User registration failed'];
+                return ['success' => false, 'error' => 'User registration failed: ' . implode(", ", $stmt->errorInfo())];
             }
         } catch (PDOException $e) {
-            // Gestion des exceptions PDO (comme les doublons d'email)
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
-    
 
     public function login($email, $mot_de_passe) {
         try {
@@ -40,13 +35,59 @@ class AuthController extends BaseController {
             $stmt->execute();
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            if($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
-                return ['success' => true, 'user_id' => $user['id']]; // Login successful
+            if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
+                return ['success' => true, 'user_id' => $user['id_utilisateur']];
             } else {
-                return ['success' => false, 'error' => 'Invalid email or password']; // Login failed
+                return ['success' => false, 'error' => 'Invalid email or password'];
             }
         } catch (PDOException $e) {
-            return ['success' => false, 'error' => $e->getMessage()]; // Database error
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function getProfile($id_utilisateur) {
+        try {
+            $query = "SELECT * FROM Utilisateur WHERE id_utilisateur = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $id_utilisateur);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function updateProfile($id_utilisateur, $nom, $prenom, $email, $adresse, $telephone) {
+        try {
+            $query = "UPDATE Utilisateur SET nom = :nom, prenom = :prenom, email = :email, adresse = :adresse, telephone = :telephone WHERE id_utilisateur = :id";
+            $stmt = $this->db->prepare($query);
+
+            $stmt->bindParam(':id', $id_utilisateur);
+            $stmt->bindParam(':nom', $nom);
+            $stmt->bindParam(':prenom', $prenom);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':adresse', $adresse);
+            $stmt->bindParam(':telephone', $telephone);
+
+            if ($stmt->execute()) {
+                return ['success' => true, 'message' => 'Profile updated successfully'];
+            } else {
+                return ['success' => false, 'error' => 'Profile update failed: ' . implode(", ", $stmt->errorInfo())];
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function getUserById($id_utilisateur) {
+        try {
+            $query = "SELECT * FROM Utilisateur WHERE id_utilisateur = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $id_utilisateur);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 }
