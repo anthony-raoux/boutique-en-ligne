@@ -57,15 +57,35 @@ class AuthController extends BaseController {
         }
     }
 
-    public function updateProfile($id_utilisateur, $nom, $prenom, $email, $adresse, $telephone) {
+    public function updateProfile($id_utilisateur, $nom, $prenom, $email, $mot_de_passe, $adresse, $telephone) {
         try {
+            // Check if email already exists
+            $query = "SELECT * FROM Utilisateur WHERE email = :email AND id_utilisateur != :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':id', $id_utilisateur);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                return ['success' => false, 'error' => 'Email already in use by another account'];
+            }
+
             $query = "UPDATE Utilisateur SET nom = :nom, prenom = :prenom, email = :email, adresse = :adresse, telephone = :telephone WHERE id_utilisateur = :id";
+
+            if ($mot_de_passe) {
+                $query = "UPDATE Utilisateur SET nom = :nom, prenom = :prenom, email = :email, mot_de_passe = :mot_de_passe, adresse = :adresse, telephone = :telephone WHERE id_utilisateur = :id";
+                $hashed_password = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+            }
+
             $stmt = $this->db->prepare($query);
 
             $stmt->bindParam(':id', $id_utilisateur);
             $stmt->bindParam(':nom', $nom);
             $stmt->bindParam(':prenom', $prenom);
             $stmt->bindParam(':email', $email);
+            if ($mot_de_passe) {
+                $stmt->bindParam(':mot_de_passe', $hashed_password);
+            }
             $stmt->bindParam(':adresse', $adresse);
             $stmt->bindParam(':telephone', $telephone);
 
@@ -78,6 +98,7 @@ class AuthController extends BaseController {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
+
 
     public function getUserById($id_utilisateur) {
         try {
