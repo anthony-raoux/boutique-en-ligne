@@ -45,15 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($nomError) && empty($prenomError) && empty($emailError) && empty($mot_de_passeError) && empty($adresseError)) {
         $registerResult = $authController->register($nom, $prenom, $email, $mot_de_passe, $adresse, $telephone);
 
-        // Vérifier le résultat de l'inscription
         if ($registerResult['success']) {
-            // Redirection vers la page de connexion après une inscription réussie
+            // Inscription réussie, rediriger vers la page de connexion
+            $_SESSION['register_success'] = true; // Définit une variable de session pour le succès
             header("Location: login.php");
             exit();
         } else {
-            // Affichage de l'erreur d'inscription
+            // Inscription échouée, afficher le message d'erreur
             $registerError = $registerResult['error'];
-        }
+        }  
     }
 }
 ?>

@@ -33,16 +33,20 @@ class AuthController extends BaseController {
     
 
     public function login($email, $mot_de_passe) {
-        $query = "SELECT * FROM Utilisateur WHERE email = :email";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
+        try {
+            $query = "SELECT * FROM Utilisateur WHERE email = :email";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
-            return ['status' => 'success', 'message' => 'Login successful'];
-        } else {
-            return ['status' => 'error', 'message' => 'Invalid email or password'];
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
+                return ['success' => true, 'user_id' => $user['id']]; // Login successful
+            } else {
+                return ['success' => false, 'error' => 'Invalid email or password']; // Login failed
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()]; // Database error
         }
     }
 }
