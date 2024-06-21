@@ -1,4 +1,4 @@
-document.getElementById('registerForm').addEventListener('submit', async function (e) {
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const formData = new FormData(this);
@@ -21,12 +21,24 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Erreur HTTP: ' + response.status);
         }
 
+        // Analyser la réponse JSON uniquement si le statut est OK
         const result = await response.json();
-        console.log('Registration successful:', result);
+        if (result.success) {
+            console.log('Utilisateur enregistré avec succès:', result.message);
+            // Afficher le message de confirmation
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.innerHTML = '<p>Inscription réussie !</p>';
+            // Vous pouvez également rediriger l'utilisateur vers une autre page ici si nécessaire
+        } else {
+            console.error('Erreur lors de l\'inscription:', result.error);
+            // Affichage d'un message d'erreur si nécessaire
+        }
+
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Erreur lors de la requête fetch:', error);
+        // Gérer d'autres erreurs, par exemple si la requête échoue complètement
     }
 });
