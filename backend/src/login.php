@@ -1,50 +1,38 @@
-<!-- backend/src/login.php -->
 <?php
-// Start or resume session
 session_start();
 
-// Check if user is already logged in, redirect to profile.php if true
 if (isset($_SESSION['user_id'])) {
     header("Location: profile.php");
     exit();
 }
 
-// Include necessary files
-require_once '../controllers/AuthController.php';
+require_once './controllers/AuthController.php';
 $authController = new AuthController();
 
-// Initialize variables for form input and error messages
 $email = $password = '';
 $emailError = $passwordError = '';
 $loginError = '';
 
-// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize and validate inputs
     $email = htmlspecialchars(trim($_POST['email']));
     $password = htmlspecialchars($_POST['password']);
 
-    // Validate email
     if (empty($email)) {
         $emailError = 'Please enter your email.';
     }
 
-    // Validate password
     if (empty($password)) {
         $passwordError = 'Please enter your password.';
     }
 
-    // If no input errors, attempt login
     if (empty($emailError) && empty($passwordError)) {
         $loginResult = $authController->login($email, $password);
 
         if ($loginResult['success']) {
-            // Login successful, redirect to profile page
             $_SESSION['user_id'] = $loginResult['user_id'];
             header("Location: profile.php");
             exit();
         } else {
-            // Login failed, display error message
             $loginError = $loginResult['error'];
         }
     }
@@ -61,9 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <?php
-    // Set current page for navbar active class
     $currentPage = 'login';
-    // Include the navbar from backend/src/
     include 'navbar.php';
     ?>
 

@@ -2,7 +2,7 @@
 require_once 'BaseController.php';
 
 class AuthController extends BaseController {
-    
+
     public function register($nom, $prenom, $email, $mot_de_passe, $adresse, $telephone) {
         try {
             $query = "INSERT INTO Utilisateur (nom, prenom, email, mot_de_passe, adresse, telephone) VALUES (:nom, :prenom, :email, :mot_de_passe, :adresse, :telephone)";
@@ -20,21 +20,16 @@ class AuthController extends BaseController {
             // Exécution de la requête
             if ($stmt->execute()) {
                 // Succès de l'inscription
-                header('Content-Type: application/json');
-                echo json_encode(['success' => true, 'message' => 'User registered successfully']);
+                return ['success' => true, 'message' => 'User registered successfully'];
             } else {
                 // Échec de l'inscription
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'error' => 'User registration failed']);
+                return ['success' => false, 'error' => 'User registration failed'];
             }
         } catch (PDOException $e) {
             // Gestion des exceptions PDO (comme les doublons d'email)
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
-
-    
     
 
     public function login($email, $mot_de_passe) {
