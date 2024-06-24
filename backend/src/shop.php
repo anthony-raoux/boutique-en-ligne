@@ -73,42 +73,42 @@ $message = '';
     <main>
         <h1>Shop</h1>
 
-        <!-- Formulaire de filtrage par catégorie -->
         <form id="categoryFilterForm">
-            <label for="category">Filtrer par catégorie :</label>
-            <select id="category" name="category">
-                <option value="">Toutes les catégories</option>
-                <?php foreach ($categories as $category): ?>
-                    <option value="<?php echo htmlspecialchars($category['id_categorie']); ?>"><?php echo htmlspecialchars($category['nom']); ?></option>
-                <?php endforeach; ?>
-            </select>
-            <button type="submit">Filtrer</button>
-        </form>
+    <label for="category">Filtrer par catégorie :</label>
+    <select id="category" name="category">
+        <option value="">Toutes les catégories</option>
+        <?php foreach ($categories as $category): ?>
+            <option value="<?php echo htmlspecialchars($category['id_categorie']); ?>"><?php echo htmlspecialchars($category['nom']); ?></option>
+        <?php endforeach; ?>
+    </select>
+    <button type="submit">Filtrer</button>
+</form>
+
 
         <?php if (!empty($message)): ?>
             <p><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
         
         <div class="products">
-            <?php if (empty($products)): ?>
-                <p>Aucun produit disponible pour le moment.</p>
-            <?php else: ?>
-                <?php foreach ($products as $product): ?>
-                    <div class="product">
-                        <?php if (!empty($product['image'])): ?>
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" />
-                        <?php else: ?>
-                            <img src="placeholder.jpg" alt="Image indisponible" /> <!-- Remplacez placeholder.jpg par votre image par défaut -->
-                        <?php endif; ?>
-                        <h2><?php echo htmlspecialchars($product['nom'] ?? 'Nom indisponible'); ?></h2>
-                        <p><?php echo htmlspecialchars($product['description'] ?? 'Description indisponible'); ?></p>
-                        <p class="price">Prix: <?php echo htmlspecialchars($product['prix'] ?? 'Prix indisponible'); ?> €</p>
-                        <p>Stock: <?php echo htmlspecialchars($product['stock'] ?? 'Stock indisponible'); ?></p>
-                        <!-- Ajoutez ici d'autres informations sur le produit si nécessaire -->
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
+    <?php if (empty($products)): ?>
+        <p>Aucun produit disponible pour le moment.</p>
+    <?php else: ?>
+        <?php foreach ($products as $product): ?>
+            <div class="product" data-id="<?php echo $product['id_produit']; ?>">
+                <?php if (!empty($product['image'])): ?>
+                    <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" />
+                <?php else: ?>
+                    <img src="placeholder.jpg" alt="Image indisponible" />
+                <?php endif; ?>
+                <h2><?php echo htmlspecialchars($product['nom'] ?? 'Nom indisponible'); ?></h2>
+                <p><?php echo htmlspecialchars($product['description'] ?? 'Description indisponible'); ?></p>
+                <p class="price">Prix: <?php echo htmlspecialchars($product['prix'] ?? 'Prix indisponible'); ?> €</p>
+                <p>Stock: <?php echo htmlspecialchars($product['stock'] ?? 'Stock indisponible'); ?></p>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
+
     </main>
     
     <footer>
@@ -116,42 +116,46 @@ $message = '';
     </footer>
 
     <script>
-        document.getElementById('categoryFilterForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const categoryId = document.getElementById('category').value;
-            fetchProducts(categoryId);
+    // Sélectionnez tous les éléments avec la classe 'product'
+    const products = document.querySelectorAll('.product');
+
+    // Ajoutez un gestionnaire d'événement de clic à chaque produit
+    products.forEach(product => {
+        product.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+            fetchProductDetails(productId);
         });
+    });
 
-        function fetchProducts(categoryId) {
-            let url = 'fetch_products.php';
-            if (categoryId !== '') {
-                url += '?category=' + encodeURIComponent(categoryId);
-            }
+    // Fonction pour récupérer les détails d'un produit
+    function fetchProductDetails(productId) {
+        let url = 'fetch_product_details.php?product_id=' + encodeURIComponent(productId);
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const productsContainer = document.querySelector('.products');
-                        productsContainer.innerHTML = '';
-                        data.products.forEach(product => {
-                            const productHTML = `
-                                <div class="product">
-                                    <img src="data:image/jpeg;base64,${product.image}" alt="${product.nom}" />
-                                    <h2>${product.nom}</h2>
-                                    <p>${product.description}</p>
-                                    <p class="price">Prix: ${product.prix} €</p>
-                                    <p>Stock: ${product.stock}</p>
-                                </div>
-                            `;
-                            productsContainer.innerHTML += productHTML;
-                        });
-                    } else {
-                        console.error('Erreur lors du chargement des produits : ' + data.error);
-                    }
-                })
-                .catch(error => console.error('Erreur fetch : ' + error));
-        }
-    </script>
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Manipulez ici les données du produit, par exemple :
+                    console.log(data.product);
+                    // Affichez les détails du produit dans une fenêtre modale ou une nouvelle page
+                    // Exemple : afficherNomDuProduit(data.product.nom);
+                } else {
+                    console.error('Erreur lors de la récupération des détails du produit : ' + data.error);
+                }
+            })
+            .catch(error => console.error('Erreur fetch : ' + error));
+    }
+
+    // Fonction pour afficher les détails du produit
+    function showProductDetails(product) {
+        // Vous pouvez afficher les détails du produit où vous le souhaitez sur la page
+        console.log(product);
+        // Exemple : Affichez les détails dans une modale
+        // Remplacez cet exemple par votre propre logique d'affichage des détails du produit
+        alert(`Nom: ${product.nom}\nDescription: ${product.description}\nPrix: ${product.prix} €\nStock: ${product.stock}`);
+    }
+</script>
+
+
 </body>
 </html>
