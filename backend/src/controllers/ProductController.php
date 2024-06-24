@@ -99,6 +99,25 @@ class ProductController extends BaseController {
         }
     }
     
+    public function getProductsByCategory($category_id = null) {
+        try {
+            $query = "SELECT id, name, image, price, description FROM products";
+            if ($category_id) {
+                $query .= " WHERE category_id = :category_id";
+            }
+            $stmt = $this->db->prepare($query);
+            if ($category_id) {
+                $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+            }
+            $stmt->execute();
+
+            $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $products;
+        } catch (PDOException $e) {
+            // Handle PDO exceptions
+            return [];
+        }
+    }
 
     public function getProductById($productId) {
         try {

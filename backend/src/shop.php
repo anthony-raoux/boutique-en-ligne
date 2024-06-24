@@ -53,4 +53,3 @@ $categories = $categoryController->getAllCategories();
     <script src="scripts.js"></script>
 </body>
 </html>
-
