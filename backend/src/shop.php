@@ -127,31 +127,34 @@ $message = '';
         });
     });
 
-    // Fonction pour récupérer les détails d'un produit
     function fetchProductDetails(productId) {
-        let url = 'fetch_product_details.php?product_id=' + encodeURIComponent(productId);
+    let url = 'fetch_product_details.php?product_id=' + encodeURIComponent(productId);
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Manipulez ici les données du produit, par exemple :
-                    console.log(data.product);
-                    // Affichez les détails du produit dans une fenêtre modale ou une nouvelle page
-                    // Exemple : afficherNomDuProduit(data.product.nom);
-                } else {
-                    console.error('Erreur lors de la récupération des détails du produit : ' + data.error);
-                }
-            })
-            .catch(error => console.error('Erreur fetch : ' + error));
-    }
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur HTTP ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                showProductDetails(data.product);
+            } else {
+                console.error('Erreur lors de la récupération des détails du produit : ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur fetch : ' + error);
+            // Handle specific types of errors if needed
+        });
+}
+
+
 
     // Fonction pour afficher les détails du produit
     function showProductDetails(product) {
-        // Vous pouvez afficher les détails du produit où vous le souhaitez sur la page
-        console.log(product);
         // Exemple : Affichez les détails dans une modale
-        // Remplacez cet exemple par votre propre logique d'affichage des détails du produit
         alert(`Nom: ${product.nom}\nDescription: ${product.description}\nPrix: ${product.prix} €\nStock: ${product.stock}`);
     }
 </script>
