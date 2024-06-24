@@ -18,10 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
             url += `?category_id=${categoryId}`;
         }
 
+        console.log('Fetching products from:', url); // Debug output
+
         fetch(url)
             .then(response => response.json())
-            .then(products => {
-                displayProducts(products);
+            .then(data => {
+                console.log('Fetched products:', data); // Debug output
+                displayProducts(data.products);
             })
             .catch(error => console.error('Error fetching products:', error));
     }

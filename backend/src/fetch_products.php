@@ -1,11 +1,11 @@
 <?php
 require_once 'controllers/ProductController.php';
 
-$category_id = isset($_GET['category_id']) ? intval($_GET['category_id']) : null;
+$category = $_GET['category'] ?? '';
 
 $productController = new ProductController();
-$products = $productController->getProductsByCategory($category_id);
+$result = $productController->getProductsByCategory($category);
 
 header('Content-Type: application/json');
-echo json_encode($products);
+echo json_encode($result);
 ?>

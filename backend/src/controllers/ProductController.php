@@ -99,23 +99,27 @@ class ProductController extends BaseController {
         }
     }
     
-    public function getProductsByCategory($category_id = null) {
-        try {
-            $query = "SELECT id, name, image, price, description FROM products";
-            if ($category_id) {
-                $query .= " WHERE category_id = :category_id";
-            }
-            $stmt = $this->db->prepare($query);
-            if ($category_id) {
-                $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
-            }
-            $stmt->execute();
+    public function getProductsByCategory($category) {
+        $conn = $this->connectDb(); // Assurez-vous d'avoir une méthode connectDb() pour la connexion à la base de données
+        
+        $sql = "SELECT id_produit, nom, description, prix, image, stock
+                FROM produit
+                WHERE id_categorie = ?";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $category);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $products;
-        } catch (PDOException $e) {
-            // Handle PDO exceptions
-            return [];
+        if ($result->num_rows > 0) {
+            $products = [];
+            while($row = $result->fetch_assoc()) {
+                $row['image'] = base64_encode($row['image']); // Encode l'image en base64 pour l'affichage
+                $products[] = $row;
+            }
+            return ['success' => true, 'products' => $products];
+        } else {
+            return ['success' => false, 'error' => 'Aucun produit trouvé pour cette catégorie'];
         }
     }
 
