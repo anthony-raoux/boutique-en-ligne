@@ -90,6 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
-    <script src="../frontend/js/script.js"></script>
+    <script src="../frontend/js/login.js"></script>
 </body>
 </html>
