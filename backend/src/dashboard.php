@@ -12,7 +12,15 @@ require_once 'controllers/ProductController.php';
 $productController = new ProductController();
 
 // Récupérer tous les produits
-$products = $productController->getAllProducts();
+$result = $productController->getAllProducts();
+$products = $result['products'] ?? [];  // Récupérer les produits ou initialiser à un tableau vide
+
+// Debugging: Check the result of getAllProducts
+if (!$result['success']) {
+    echo "Erreur : " . $result['error'];
+} else {
+    echo "Produits récupérés avec succès";
+}
 
 // Message d'erreur ou de succès lors des opérations
 $message = '';
@@ -24,21 +32,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nom = htmlspecialchars($_POST['nom']);
         $description = htmlspecialchars($_POST['description']);
         $prix = floatval($_POST['prix']);
-        $image = htmlspecialchars($_POST['image']); // À adapter selon votre gestion d'images
         $stock = intval($_POST['stock']);
         $id_categorie = intval($_POST['id_categorie']);
 
-        $result = $productController->addProduct($nom, $description, $prix, $image, $stock, $id_categorie);
+        // Gestion de l'image
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            $imageTmpName = $_FILES['image']['tmp_name'];
+            $result = $productController->addProduct($nom, $description, $prix, $imageTmpName, $stock, $id_categorie);
 
-        if ($result['success']) {
-            $message = "Produit ajouté avec succès.";
-            $products = $productController->getAllProducts(); // Mettre à jour la liste des produits après l'ajout
+            if ($result['success']) {
+                $message = "Produit ajouté avec succès.";
+                $result = $productController->getAllProducts(); // Mettre à jour la liste des produits après l'ajout
+                $products = $result['products'] ?? [];  // Récupérer les produits ou initialiser à un tableau vide
+            } else {
+                $message = "Erreur lors de l'ajout du produit: " . $result['error'];
+            }
         } else {
-            $message = "Erreur lors de l'ajout du produit: " . $result['error'];
+            $message = "Erreur lors du téléchargement de l'image.";
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Formulaire pour ajouter un nouveau produit -->
         <div class="add-product-form">
             <h2>Ajouter un produit</h2>
-            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nom">Nom:</label>
                     <input type="text" id="nom" name="nom" required>
@@ -77,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="image">Image:</label>
-                    <input type="text" id="image" name="image">
+                    <input type="file" id="image" name="image" required>
                 </div>
                 <div class="form-group">
                     <label for="stock">Stock:</label>
@@ -91,43 +104,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
 
-    <!-- Liste des produits existants -->
-<div class="product-list">
-    <h2>Liste des produits</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Description</th>
-                <th>Prix</th>
-                <th>Stock</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (!empty($products) && is_array($products)) : ?>
-                <?php foreach ($products as $product) : ?>
-                    <tr>
-                        <td><?php echo isset($product['nom']) ? htmlspecialchars($product['nom']) : ''; ?></td>
-                        <td><?php echo isset($product['description']) ? htmlspecialchars($product['description']) : ''; ?></td>
-                        <td><?php echo isset($product['prix']) ? number_format($product['prix'], 2, ',', ' ') : ''; ?></td>
-                        <td><?php echo isset($product['stock']) ? $product['stock'] : ''; ?></td>
-                        <td>
-                            <a href="edit_product.php?id=<?php echo isset($product['id_produit']) ? $product['id_produit'] : ''; ?>">Modifier</a>
-                            <a href="delete_product.php?id=<?php echo isset($product['id_produit']) ? $product['id_produit'] : ''; ?>">Supprimer</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+        <!-- Liste des produits existants -->
+        <div class="product-list">
+            <h2>Liste des produits</h2>
+            <?php if (empty($products)) : ?>
+                <p>Aucun produit trouvé.</p>
             <?php else : ?>
-                <tr>
-                    <td colspan="5">Aucun produit trouvé.</td>
-                </tr>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Prix</th>
+                            <th>Image</th>
+                            <th>Stock</th>
+                            <th>Catégorie</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($products as $product) : ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($product['nom'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($product['description'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($product['prix'] ?? ''); ?></td>
+                                <td>
+                                    <?php if (!empty($product['image'])): ?>
+                                        <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom'] ?? ''); ?>" width="50">
+                                    <?php else: ?>
+                                        <img src="path/to/default/image.jpg" alt="Image par défaut" width="50">
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($product['stock'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($product['nom_categorie'] ?? ''); ?></td>
+                                <td>
+                                    <form action="deleteProduct.php" method="post" style="display:inline;">
+                                        <input type="hidden" name="id_produit" value="<?php echo htmlspecialchars($product['id_produit']); ?>">
+                                        <button type="submit">Supprimer</button>
+                                    </form>
+                                    <form action="updateProduct.php" method="get" style="display:inline;">
+                                        <input type="hidden" name="id_produit" value="<?php echo htmlspecialchars($product['id_produit']); ?>">
+                                        <button type="submit">Modifier</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             <?php endif; ?>
-        </tbody>
-    </table>
-</div>
-
-
-    <script src="../frontend/js/script.js"></script>
+        </div>
+    </div>
 </body>
 </html>

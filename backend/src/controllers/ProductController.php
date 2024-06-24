@@ -3,16 +3,19 @@ require_once __DIR__ . '/BaseController.php';
 
 class ProductController extends BaseController {
 
-    public function addProduct($name, $description, $price, $image, $stock, $categoryId) {
+    public function addProduct($name, $description, $price, $imageTmpName, $stock, $categoryId) {
         try {
             $query = "INSERT INTO produits (nom, description, prix, image, stock, id_categorie) 
                       VALUES (:nom, :description, :prix, :image, :stock, :id_categorie)";
             $stmt = $this->db->prepare($query);
 
+            // Read image file as binary data
+            $imageData = file_get_contents($imageTmpName);
+
             $stmt->bindParam(':nom', $name);
             $stmt->bindParam(':description', $description);
             $stmt->bindParam(':prix', $price);
-            $stmt->bindParam(':image', $image);
+            $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
             $stmt->bindParam(':stock', $stock);
             $stmt->bindParam(':id_categorie', $categoryId);
 
@@ -42,16 +45,19 @@ class ProductController extends BaseController {
         }
     }
 
-    public function updateProduct($productId, $name, $description, $price, $image, $stock, $categoryId) {
+    public function updateProduct($productId, $name, $description, $price, $imageTmpName, $stock, $categoryId) {
         try {
             $query = "UPDATE produits SET nom = :nom, description = :description, prix = :prix, image = :image, stock = :stock, id_categorie = :id_categorie WHERE id_produit = :id_produit";
             $stmt = $this->db->prepare($query);
+
+            // Read image file as binary data
+            $imageData = file_get_contents($imageTmpName);
 
             $stmt->bindParam(':id_produit', $productId);
             $stmt->bindParam(':nom', $name);
             $stmt->bindParam(':description', $description);
             $stmt->bindParam(':prix', $price);
-            $stmt->bindParam(':image', $image);
+            $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
             $stmt->bindParam(':stock', $stock);
             $stmt->bindParam(':id_categorie', $categoryId);
 
@@ -72,11 +78,18 @@ class ProductController extends BaseController {
                       LEFT JOIN category c ON p.id_categorie = c.id_categorie";
             $stmt = $this->db->query($query);
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Check if products array is empty
+            if (!$products) {
+                $products = [];
+            }
+    
             return ['success' => true, 'products' => $products];
         } catch (PDOException $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
+    
 
     public function getProductById($productId) {
         try {
@@ -98,4 +111,6 @@ class ProductController extends BaseController {
         }
     }
 }
+
+
 ?>
