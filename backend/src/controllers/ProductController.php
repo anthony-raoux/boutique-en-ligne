@@ -45,24 +45,32 @@ class ProductController extends BaseController {
         }
     }
 
-    public function updateProduct($productId, $name, $description, $price, $imageTmpName, $stock, $categoryId) {
+    public function updateProduct($productId, $nom, $description, $prix, $imageTmpName, $stock, $id_categorie) {
         try {
-            $query = "UPDATE produits SET nom = :nom, description = :description, prix = :prix, image = :image, stock = :stock, id_categorie = :id_categorie WHERE id_produit = :id_produit";
+            $query = "UPDATE produits SET nom = :nom, description = :description, prix = :prix, stock = :stock, id_categorie = :id_categorie";
+            if ($imageTmpName !== null) {
+                $query .= ", image = :image";
+            }
+            $query .= " WHERE id_produit = :id_produit";
+    
             $stmt = $this->db->prepare($query);
-
-            // Read image file as binary data
-            $imageData = file_get_contents($imageTmpName);
-
-            $stmt->bindParam(':id_produit', $productId);
-            $stmt->bindParam(':nom', $name);
+    
+            // Bind parameters
+            $stmt->bindParam(':nom', $nom);
             $stmt->bindParam(':description', $description);
-            $stmt->bindParam(':prix', $price);
-            $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
+            $stmt->bindParam(':prix', $prix);
             $stmt->bindParam(':stock', $stock);
-            $stmt->bindParam(':id_categorie', $categoryId);
-
+            $stmt->bindParam(':id_categorie', $id_categorie);
+            $stmt->bindParam(':id_produit', $productId);
+    
+            // Bind image if provided
+            if ($imageTmpName !== null) {
+                $imageData = file_get_contents($imageTmpName);
+                $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
+            }
+    
             if ($stmt->execute()) {
-                return ['success' => true, 'message' => 'Produit mis à jour avec succès'];
+                return ['success' => true];
             } else {
                 return ['success' => false, 'error' => 'Échec de la mise à jour du produit: ' . implode(", ", $stmt->errorInfo())];
             }
@@ -70,6 +78,7 @@ class ProductController extends BaseController {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
+    
 
     public function getAllProducts() {
         try {

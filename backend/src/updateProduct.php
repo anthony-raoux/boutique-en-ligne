@@ -14,8 +14,20 @@ if (!isset($_GET['id_produit'])) {
     exit();
 }
 
-// Initialize product controller
-$productController = new ProductController();
+// Initialize database connection (PDO assumed)
+$dsn = 'mysql:host=localhost;dbname=boutique_en_ligne';
+$username = 'root';
+$password = '';
+
+try {
+    $db = new PDO($dsn, $username, $password);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die('Database connection failed: ' . $e->getMessage());
+}
+
+// Initialize product controller with the database connection
+$productController = new ProductController($db);
 
 // Fetch product details for update
 $productId = $_GET['id_produit'];
@@ -43,11 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateProduct'])) {
     // Handle image update
     $image = $product['image']; // Default to current image if not updated
     if ($_FILES['image']['error'] === UPLOAD_ERR_OK && is_uploaded_file($_FILES['image']['tmp_name'])) {
-        $image = file_get_contents($_FILES['image']['tmp_name']);
+        $imageTmpName = $_FILES['image']['tmp_name'];
+    } else {
+        $imageTmpName = null; // Handle case where image is not updated
     }
 
     // Update product in database
-    $updateResult = $productController->updateProduct($productId, $nom, $description, $prix, $image, $stock, $id_categorie);
+    $updateResult = $productController->updateProduct($productId, $nom, $description, $prix, $imageTmpName, $stock, $id_categorie);
 
     if ($updateResult['success']) {
         $_SESSION['message'] = "Produit mis à jour avec succès.";
@@ -57,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateProduct'])) {
         $message = "Erreur lors de la mise à jour du produit: " . htmlspecialchars($updateResult['error']);
     }
 }
+
 ?>
 
 <!DOCTYPE html>
