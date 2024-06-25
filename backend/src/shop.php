@@ -30,15 +30,42 @@ $message = '';
     <title>Shop</title>
     <link rel="stylesheet" href="path/to/your/css/styles.css">
     <style>
-        .products { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px; }
-        .product { border: 1px solid #ccc; border-radius: 8px; padding: 15px; width: 300px; background-color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .product img { width: 100%; height: auto; border-radius: 8px; }
-        .product h2 { font-size: 1.5rem; margin-bottom: 10px; }
-        .filter { margin-bottom: 20px; }
+        .products { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 20px; 
+            justify-content: center; 
+            margin-top: 20px; 
+        }
+        .product { 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            padding: 15px; 
+            width: 300px; 
+            background-color: #fff; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            display: flex; 
+            flex-direction: column; /* Aligner les éléments en colonne */
+            align-items: center; /* Centrer horizontalement les éléments */
+        }
+        .product img { 
+            width: 100%; 
+            height: auto; 
+            border-radius: 8px; 
+            margin-bottom: 10px; /* Espacement entre l'image et le nom du produit */
+        }
+        .product h2 { 
+            font-size: 1.5rem; 
+            margin-bottom: 10px; 
+            text-align: center; /* Centrer le texte */
+        }
+        .filter { 
+            margin-bottom: 20px; 
+        }
     </style>
 </head>
 <body>
-<?php require_once 'navbar.php'; ?>
+    <?php require_once 'navbar.php'; ?>
     <header></header>
     <main>
         <h1>Shop</h1>
@@ -61,12 +88,12 @@ $message = '';
             <?php else: ?>
                 <?php foreach ($products as $product): ?>
                     <div class="product" data-id="<?php echo $product['id_produit']; ?>">
+                        <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
                         <?php if (!empty($product['image'])): ?>
                             <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" />
                         <?php else: ?>
                             <img src="placeholder.jpg" alt="Image indisponible" />
                         <?php endif; ?>
-                        <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

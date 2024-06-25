@@ -21,6 +21,12 @@ if (!$product) {
     echo "Produit non trouvé.";
     exit;
 }
+
+// Initialisation du panier s'il n'existe pas déjà en session
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -55,6 +61,12 @@ if (!$product) {
             <p>Stock: <?php echo htmlspecialchars($product['stock']); ?></p>
             <p>Catégorie: <?php echo htmlspecialchars($product['nom_categorie']); ?></p>
             <button class="add-to-cart" onclick="addToCart(<?php echo $product['id_produit']; ?>)">Ajouter au panier</button>
+            <?php
+            // Vérifier si le produit est dans le panier
+            if (array_key_exists($product_id, $_SESSION['cart'])) {
+                echo '<button class="remove-item" onclick="removeFromCart(' . $product['id_produit'] . ')">Supprimer</button>';
+            }
+            ?>
         </div>
     </main>
     <footer></footer>
@@ -71,6 +83,27 @@ if (!$product) {
             .then(data => {
                 if (data.success) {
                     alert('Produit ajouté au panier!');
+                } else {
+                    alert('Erreur: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+            });
+        }
+    
+        function removeFromCart(productId) {
+            fetch('remove_from_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ product_id: productId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
                 } else {
                     alert('Erreur: ' + data.error);
                 }
