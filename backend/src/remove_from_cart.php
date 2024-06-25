@@ -16,4 +16,9 @@ if (isset($_SESSION['cart'][$product_id])) {
 } else {
     echo json_encode(['success' => false, 'error' => 'Produit non trouvé dans le panier']);
 }
+
+// Supprimer le produit du panier dans la base de données
+$query = $db->prepare('DELETE FROM ligne_de_commande WHERE user_id = ? AND product_id = ?');
+$query->execute([$user_id, $product_id]);
+
 ?>

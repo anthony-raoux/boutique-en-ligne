@@ -15,13 +15,6 @@ if (!$product_id) {
     exit;
 }
 
-// Vérifier si le produit existe dans la base de données
-$product = $productController->getProductById($product_id);
-if (!$product['success']) {
-    echo json_encode(['success' => false, 'error' => 'Produit non trouvé']);
-    exit;
-}
-
 // Ajouter le produit au panier en session
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
@@ -39,7 +32,11 @@ $user_id = 1; // Exemple : ID de l'utilisateur connecté
 // Calculer le prix total des produits dans le panier
 $totalPrice = 0;
 foreach ($_SESSION['cart'] as $product_id => $quantity) {
-    $totalPrice += $product['prix'] * $quantity;
+    $result = $productController->getProductById($product_id);
+    if ($result['success']) {
+        $product = $result['product'];
+        $totalPrice += $product['prix'] * $quantity;
+    }
 }
 
 // Enregistrer le panier dans la base de données
@@ -47,20 +44,23 @@ try {
     // Démarre une transaction
     $db->beginTransaction();
 
-    // Insérer ou mettre à jour le produit dans la table panier
-    $query = "INSERT INTO panier (user_id, product_id, quantity, total_price, created_at) 
-              VALUES (:user_id, :product_id, :quantity, :total_price, NOW())
-              ON DUPLICATE KEY UPDATE quantity = :quantity, total_price = :total_price";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
-    $stmt->bindParam(':quantity', $_SESSION['cart'][$product_id], PDO::PARAM_INT);
-    $stmt->bindParam(':total_price', $totalPrice, PDO::PARAM_STR); // Utilisation de PARAM_STR car total_price est un montant
+    foreach ($_SESSION['cart'] as $product_id => $quantity) {
+        $query = "INSERT INTO panier (user_id, product_id, quantity, total_price, created_at) 
+                  VALUES (:user_id, :product_id, :quantity, :total_price, NOW())";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+        $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':total_price', $totalPrice, PDO::PARAM_STR); // Utilisation de PARAM_STR car total_price est un montant
 
-    $stmt->execute();
+        $stmt->execute();
+    }
 
     // Commit la transaction
     $db->commit();
+
+    // Réinitialiser le panier en session après l'enregistrement
+    $_SESSION['cart'] = [];
 
     echo json_encode(['success' => true]);
 } catch (PDOException $e) {
