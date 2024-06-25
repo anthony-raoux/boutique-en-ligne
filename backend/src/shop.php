@@ -34,8 +34,6 @@ $message = '';
         .product { border: 1px solid #ccc; border-radius: 8px; padding: 15px; width: 300px; background-color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         .product img { width: 100%; height: auto; border-radius: 8px; }
         .product h2 { font-size: 1.5rem; margin-bottom: 10px; }
-        .product p { font-size: 1rem; line-height: 1.5; }
-        .product .price { font-size: 1.25rem; font-weight: bold; color: #007bff; }
         .filter { margin-bottom: 20px; }
     </style>
 </head>
@@ -68,10 +66,7 @@ $message = '';
                         <?php else: ?>
                             <img src="placeholder.jpg" alt="Image indisponible" />
                         <?php endif; ?>
-                        <h2><?php echo htmlspecialchars($product['nom'] ?? 'Nom indisponible'); ?></h2>
-                        <p><?php echo htmlspecialchars($product['description'] ?? 'Description indisponible'); ?></p>
-                        <p class="price">Prix: <?php echo htmlspecialchars($product['prix'] ?? 'Prix indisponible'); ?> €</p>
-                        <p>Stock: <?php echo htmlspecialchars($product['stock'] ?? 'Stock indisponible'); ?></p>
+                        <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

@@ -9,6 +9,9 @@ $adminLoggedIn = isset($_SESSION['admin_id']);
 
 // Déterminer la page actuelle
 $currentPage = basename($_SERVER['SCRIPT_NAME'], '.php');
+
+// Calculer le nombre d'articles dans le panier
+$cartItemCount = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
 ?>
 
 <nav class="navbar">
@@ -17,6 +20,7 @@ $currentPage = basename($_SERVER['SCRIPT_NAME'], '.php');
         <li><a href="shop.php" class="<?php echo ($currentPage === 'shop') ? 'active' : ''; ?>">Shop</a></li>
         <?php if ($loggedIn) : ?>
             <li><a href="profile.php" class="<?php echo ($currentPage === 'profile') ? 'active' : ''; ?>">Profile</a></li>
+            <li><a href="cart.php" class="<?php echo ($currentPage === 'cart') ? 'active' : ''; ?>">Cart (<?php echo $cartItemCount; ?>)</a></li>
             <li><a href="logout.php">Logout</a></li>
         <?php elseif ($adminLoggedIn) : ?>
             <li><a href="dashboard.php" class="<?php echo ($currentPage === 'dashboard') ? 'active' : ''; ?>">Dashboard</a></li>
