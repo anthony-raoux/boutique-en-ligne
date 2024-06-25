@@ -49,6 +49,57 @@ class ProductController extends BaseController {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
+
+    public function addCategory($nom, $id_parent_categorie = null) {
+        try {
+            $query = "INSERT INTO category (nom, id_parent_categorie) VALUES (:nom, :id_parent_categorie)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':nom', $nom);
+            $stmt->bindParam(':id_parent_categorie', $id_parent_categorie, PDO::PARAM_INT);
+    
+            if ($stmt->execute()) {
+                return ['success' => true, 'message' => 'Catégorie ajoutée avec succès'];
+            } else {
+                return ['success' => false, 'error' => 'Échec de l\'ajout de la catégorie: ' . implode(", ", $stmt->errorInfo())];
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function deleteCategory($id_categorie) {
+        try {
+            $query = "DELETE FROM category WHERE id_categorie = :id_categorie";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id_categorie', $id_categorie);
+    
+            if ($stmt->execute()) {
+                return ['success' => true, 'message' => 'Catégorie supprimée avec succès'];
+            } else {
+                return ['success' => false, 'error' => 'Échec de la suppression de la catégorie: ' . implode(", ", $stmt->errorInfo())];
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function updateCategory($id_categorie, $nom, $id_parent_categorie = null) {
+        try {
+            $query = "UPDATE category SET nom = :nom, id_parent_categorie = :id_parent_categorie WHERE id_categorie = :id_categorie";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':nom', $nom);
+            $stmt->bindParam(':id_parent_categorie', $id_parent_categorie, PDO::PARAM_INT);
+            $stmt->bindParam(':id_categorie', $id_categorie);
+    
+            if ($stmt->execute()) {
+                return ['success' => true, 'message' => 'Catégorie mise à jour avec succès'];
+            } else {
+                return ['success' => false, 'error' => 'Échec de la mise à jour de la catégorie: ' . implode(", ", $stmt->errorInfo())];
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
     
     // Méthode pour récupérer les détails d'un produit par ID
     public function getProductById($productId) {

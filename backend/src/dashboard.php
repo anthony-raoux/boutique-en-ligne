@@ -25,6 +25,43 @@ if (!$result['success']) {
 // Message d'erreur ou de succès lors des opérations
 $message = '';
 
+// Traitement des actions sur les catégories
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ajout d'une nouvelle catégorie
+    if (isset($_POST['addCategory'])) {
+        $nomCategorie = htmlspecialchars($_POST['nom_categorie']);
+        $idParentCategorie = isset($_POST['id_parent_categorie']) ? intval($_POST['id_parent_categorie']) : null;
+
+        // Appel à la méthode du contrôleur pour ajouter la catégorie
+        $result = $productController->addCategory($nomCategorie, $idParentCategorie);
+
+        if ($result['success']) {
+            $message = "Catégorie ajoutée avec succès.";
+            // Mettre à jour la liste des catégories après l'ajout
+            $categories = $productController->getCategories();
+        } else {
+            $message = "Erreur lors de l'ajout de la catégorie: " . $result['error'];
+        }
+    }
+
+    // Suppression d'une catégorie
+    if (isset($_POST['deleteCategory'])) {
+        $idCategorie = intval($_POST['id_categorie']);
+
+        // Appel à la méthode du contrôleur pour supprimer la catégorie
+        $result = $productController->deleteCategory($idCategorie);
+
+        if ($result['success']) {
+            $message = "Catégorie supprimée avec succès.";
+            // Mettre à jour la liste des catégories après la suppression
+            $categories = $productController->getCategories();
+        } else {
+            $message = "Erreur lors de la suppression de la catégorie: " . $result['error'];
+        }
+    }
+}
+
+
 // Traitement des actions sur les produits
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ajout d'un nouveau produit
@@ -104,6 +141,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
 
+        <!-- Section pour gérer les catégories -->
+<div class="category-management">
+    <h2>Gestion des catégories</h2>
+    
+    <!-- Formulaire pour ajouter une nouvelle catégorie -->
+    <div class="add-category-form">
+        <h3>Ajouter une catégorie</h3>
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+            <div class="form-group">
+                <label for="nom_categorie">Nom de la catégorie:</label>
+                <input type="text" id="nom_categorie" name="nom_categorie" required>
+            </div>
+            <div class="form-group">
+                <label for="id_parent_categorie">Catégorie parente (optionnel):</label>
+                <input type="number" id="id_parent_categorie" name="id_parent_categorie">
+            </div>
+            <button type="submit" name="addCategory">Ajouter</button>
+        </form>
+    </div>
+
+   <!-- Liste des catégories existantes -->
+<div class="category-list">
+    <h3>Liste des catégories</h3>
+    <?php if (empty($categories)) : ?>
+        <p>Aucune catégorie trouvée.</p>
+    <?php else : ?>
+        <ul>
+            <?php foreach ($categories as $category) : ?>
+                <li>
+                    <?php echo htmlspecialchars($category['nom']); ?>
+                    <form action="deleteCategory.php" method="post" style="display:inline;">
+                        <input type="hidden" name="id_categorie" value="<?php echo htmlspecialchars($category['id_categorie']); ?>">
+                        <button type="submit">Supprimer</button>
+                    </form>
+                    <form action="updateCategory.php" method="get" style="display:inline;">
+                        <input type="hidden" name="id_categorie" value="<?php echo htmlspecialchars($category['id_categorie']); ?>">
+                        <button type="submit">Modifier</button>
+                    </form>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</div>
+
+
+
         <!-- Liste des produits existants -->
         <div class="product-list">
             <h2>Liste des produits</h2>
@@ -125,9 +208,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <tbody>
                         <?php foreach ($products as $product) : ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($product['nom'] ?? ''); ?></td>
-                                <td><?php echo htmlspecialchars($product['description'] ?? ''); ?></td>
-                                <td><?php echo htmlspecialchars($product['prix'] ?? ''); ?></td>
+                            <td><?php echo htmlspecialchars($product['nom'] ?? ''); ?></td>
+<td><?php echo htmlspecialchars($product['description'] ?? ''); ?></td>
+<td><?php echo htmlspecialchars($product['prix'] ?? ''); ?></td>
+
                                 <td>
                                     <?php if (!empty($product['image'])): ?>
                                         <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom'] ?? ''); ?>" width="50">
