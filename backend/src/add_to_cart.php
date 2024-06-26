@@ -1,23 +1,25 @@
 <?php
 session_start();
-require_once 'config/Database.php'; // Assurez-vous d'avoir le bon chemin vers votre classe Database
+require_once 'config/Database.php';
 require_once 'controllers/ProductController.php';
 
 $productController = new ProductController();
 $database = new Database();
 $db = $database->connect();
 
-$data = json_decode(file_get_contents('php://input'), true);
+$data = $_POST; // Utilisation de $_POST pour récupérer les données du formulaire
 $product_id = $data['product_id'] ?? null;
 
 if (!$product_id) {
-    echo json_encode(['success' => false, 'error' => 'Produit non trouvé']);
+    echo json_encode(['success' => false, 'error' => 'ID de produit manquant']);
     exit;
 }
 
 // Vérifier si le produit existe dans la base de données
-$product = $productController->getProductById($product_id);
-if (!$product['success']) {
+$productResult = $productController->getProductById($product_id);
+$product = $productResult['product'] ?? null;
+
+if (!$product) {
     echo json_encode(['success' => false, 'error' => 'Produit non trouvé']);
     exit;
 }
@@ -33,21 +35,20 @@ if (!isset($_SESSION['cart'][$product_id])) {
     $_SESSION['cart'][$product_id]++;
 }
 
-// Récupérer l'ID de l'utilisateur (simulé ici, vous devez implémenter la gestion d'authentification appropriée)
-$user_id = 1; // Exemple : ID de l'utilisateur connecté
+// Récupérer l'ID de l'utilisateur (à adapter selon votre gestion d'authentification)
+$user_id = 1;
 
 // Calculer le prix total des produits dans le panier
 $totalPrice = 0;
-foreach ($_SESSION['cart'] as $product_id => $quantity) {
-    $totalPrice += $product['prix'] * $quantity;
+foreach ($_SESSION['cart'] as $prod_id => $quantity) {
+    // Récupérer le prix du produit à partir de $product
+    $totalPrice += $product['prix'] * $quantity; // Utiliser $product['prix'] au lieu de $product['product']['prix']
 }
 
 // Enregistrer le panier dans la base de données
 try {
-    // Démarre une transaction
     $db->beginTransaction();
 
-    // Insérer ou mettre à jour le produit dans la table panier
     $query = "INSERT INTO panier (user_id, product_id, quantity, total_price, created_at) 
               VALUES (:user_id, :product_id, :quantity, :total_price, NOW())
               ON DUPLICATE KEY UPDATE quantity = :quantity, total_price = :total_price";
@@ -55,17 +56,15 @@ try {
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
     $stmt->bindParam(':quantity', $_SESSION['cart'][$product_id], PDO::PARAM_INT);
-    $stmt->bindParam(':total_price', $totalPrice, PDO::PARAM_STR); // Utilisation de PARAM_STR car total_price est un montant
+    $stmt->bindParam(':total_price', $totalPrice, PDO::PARAM_STR);
 
     $stmt->execute();
 
-    // Commit la transaction
     $db->commit();
 
-    echo json_encode(['success' => true]);
+    echo json_encode(['success' => true, 'message' => 'Produit ajouté au panier avec succès']);
 } catch (PDOException $e) {
-    // Rollback en cas d'erreur
     $db->rollBack();
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'error' => 'Erreur lors de l\'ajout au panier: ' . $e->getMessage()]);
 }
 ?>
