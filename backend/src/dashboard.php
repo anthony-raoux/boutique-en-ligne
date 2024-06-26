@@ -11,13 +11,21 @@ require_once 'controllers/ProductController.php';
 
 $productController = new ProductController();
 
-// Récupérer tous les produits
-$result = $productController->getAllProducts();
-$products = $result['products'] ?? [];  // Récupérer les produits ou initialiser à un tableau vide
+// Récupérer toutes les catégories
+$resultCategories = $productController->getCategories();
+$categories = $resultCategories['categories'] ?? [];
 
-// Debugging: Check the result of getAllProducts
-if (!$result['success']) {
-    echo "Erreur : " . $result['error'];
+// Récupérer tous les produits
+$resultProducts = $productController->getAllProducts();
+$products = $resultProducts['products'] ?? [];
+
+// Vérifier les erreurs de récupération des catégories et des produits
+if (isset($resultCategories['success']) && !$resultCategories['success']) {
+    echo "Erreur lors de la récupération des catégories : " . $resultCategories['error'];
+}
+
+if (isset($resultProducts['success']) && !$resultProducts['success']) {
+    echo "Erreur lors de la récupération des produits : " . $resultProducts['error'];
 } else {
     echo "Produits récupérés avec succès";
 }
@@ -38,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result['success']) {
             $message = "Catégorie ajoutée avec succès.";
             // Mettre à jour la liste des catégories après l'ajout
-            $categories = $productController->getCategories();
+            $resultCategories = $productController->getCategories();
+            $categories = $resultCategories['categories'] ?? [];
         } else {
             $message = "Erreur lors de l'ajout de la catégorie: " . $result['error'];
         }
@@ -54,13 +63,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result['success']) {
             $message = "Catégorie supprimée avec succès.";
             // Mettre à jour la liste des catégories après la suppression
-            $categories = $productController->getCategories();
+            $resultCategories = $productController->getCategories();
+            $categories = $resultCategories['categories'] ?? [];
         } else {
             $message = "Erreur lors de la suppression de la catégorie: " . $result['error'];
         }
     }
-}
 
+    // Mise à jour d'une catégorie
+    if (isset($_POST['updateCategory'])) {
+        $idCategorie = intval($_POST['id_categorie']);
+        $nomCategorie = htmlspecialchars($_POST['nom_categorie']);
+        $idParentCategorie = isset($_POST['id_parent_categorie']) ? intval($_POST['id_parent_categorie']) : null;
+
+        // Appel à la méthode du contrôleur pour mettre à jour la catégorie
+        $result = $productController->updateCategory($idCategorie, $nomCategorie, $idParentCategorie);
+
+        if ($result['success']) {
+            $message = "Catégorie mise à jour avec succès.";
+            // Mettre à jour la liste des catégories après la mise à jour
+            $resultCategories = $productController->getCategories();
+            $categories = $resultCategories['categories'] ?? [];
+        } else {
+            $message = "Erreur lors de la mise à jour de la catégorie: " . $result['error'];
+        }
+    }
+}
 
 // Traitement des actions sur les produits
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -79,8 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($result['success']) {
                 $message = "Produit ajouté avec succès.";
-                $result = $productController->getAllProducts(); // Mettre à jour la liste des produits après l'ajout
-                $products = $result['products'] ?? [];  // Récupérer les produits ou initialiser à un tableau vide
+                $resultProducts = $productController->getAllProducts(); // Mettre à jour la liste des produits après l'ajout
+                $products = $resultProducts['products'] ?? [];  // Récupérer les produits ou initialiser à un tableau vide
             } else {
                 $message = "Erreur lors de l'ajout du produit: " . $result['error'];
             }
@@ -142,26 +170,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <!-- Section pour gérer les catégories -->
-<div class="category-management">
-    <h2>Gestion des catégories</h2>
-    
-    <!-- Formulaire pour ajouter une nouvelle catégorie -->
-    <div class="add-category-form">
-        <h3>Ajouter une catégorie</h3>
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-            <div class="form-group">
-                <label for="nom_categorie">Nom de la catégorie:</label>
-                <input type="text" id="nom_categorie" name="nom_categorie" required>
+        <div class="category-management">
+            <h2>Gestion des catégories</h2>
+            
+            <!-- Formulaire pour ajouter une nouvelle catégorie -->
+            <div class="add-category-form">
+                <h3>Ajouter une catégorie</h3>
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                    <div class="form-group">
+                        <label for="nom_categorie">Nom de la catégorie:</label>
+                        <input type="text" id="nom_categorie" name="nom_categorie" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_parent_categorie">Catégorie parente (optionnel):</label>
+                        <input type="number" id="id_parent_categorie" name="id_parent_categorie">
+                    </div>
+                    <button type="submit" name="addCategory">Ajouter</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="id_parent_categorie">Catégorie parente (optionnel):</label>
-                <input type="number" id="id_parent_categorie" name="id_parent_categorie">
-            </div>
-            <button type="submit" name="addCategory">Ajouter</button>
-        </form>
-    </div>
 
-   <!-- Liste des catégories existantes -->
+           <!-- Liste des catégories existantes -->
 <div class="category-list">
     <h3>Liste des catégories</h3>
     <?php if (empty($categories)) : ?>
@@ -170,21 +198,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <ul>
             <?php foreach ($categories as $category) : ?>
                 <li>
-                    <?php echo htmlspecialchars($category['nom']); ?>
-                    <form action="deleteCategory.php" method="post" style="display:inline;">
-                        <input type="hidden" name="id_categorie" value="<?php echo htmlspecialchars($category['id_categorie']); ?>">
-                        <button type="submit">Supprimer</button>
+                    <?php echo htmlspecialchars($category['nom'] ?? ''); ?>
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" style="display:inline;">
+                        <input type="hidden" name="id_categorie" value="<?php echo htmlspecialchars($category['id_categorie'] ?? ''); ?>">
+                        <button type="submit" name="deleteCategory">Supprimer</button>
                     </form>
-                    <form action="updateCategory.php" method="get" style="display:inline;">
-                        <input type="hidden" name="id_categorie" value="<?php echo htmlspecialchars($category['id_categorie']); ?>">
-                        <button type="submit">Modifier</button>
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" style="display:inline;">
+                        <input type="hidden" name="id_categorie" value="<?php echo htmlspecialchars($category['id_categorie'] ?? ''); ?>">
+                        <input type="text" name="nom_categorie" value="<?php echo htmlspecialchars($category['nom'] ?? ''); ?>" required>
+                        <input type="number" name="id_parent_categorie" value="<?php echo htmlspecialchars($category['id_parent_categorie'] ?? ''); ?>">
+                        <button type="submit" name="updateCategory">Modifier</button>
                     </form>
                 </li>
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
 </div>
-
 
 
         <!-- Liste des produits existants -->
@@ -208,10 +237,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <tbody>
                         <?php foreach ($products as $product) : ?>
                             <tr>
-                            <td><?php echo htmlspecialchars($product['nom'] ?? ''); ?></td>
-<td><?php echo htmlspecialchars($product['description'] ?? ''); ?></td>
-<td><?php echo htmlspecialchars($product['prix'] ?? ''); ?></td>
-
+                                <td><?php echo htmlspecialchars($product['nom'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($product['description'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($product['prix'] ?? ''); ?></td>
                                 <td>
                                     <?php if (!empty($product['image'])): ?>
                                         <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom'] ?? ''); ?>" width="50">

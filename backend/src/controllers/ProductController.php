@@ -38,13 +38,13 @@ class ProductController extends BaseController {
         }
     }
 
-    // Méthode pour récupérer toutes les catégories
+  
     public function getCategories() {
         try {
             $sql = "SELECT * FROM category";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return ['success' => true, 'categories' => $stmt->fetchAll(PDO::FETCH_ASSOC)];
         } catch (Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -56,7 +56,7 @@ class ProductController extends BaseController {
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':nom', $nom);
             $stmt->bindParam(':id_parent_categorie', $id_parent_categorie, PDO::PARAM_INT);
-    
+
             if ($stmt->execute()) {
                 return ['success' => true, 'message' => 'Catégorie ajoutée avec succès'];
             } else {
@@ -72,7 +72,7 @@ class ProductController extends BaseController {
             $query = "DELETE FROM category WHERE id_categorie = :id_categorie";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':id_categorie', $id_categorie);
-    
+
             if ($stmt->execute()) {
                 return ['success' => true, 'message' => 'Catégorie supprimée avec succès'];
             } else {
@@ -90,7 +90,7 @@ class ProductController extends BaseController {
             $stmt->bindParam(':nom', $nom);
             $stmt->bindParam(':id_parent_categorie', $id_parent_categorie, PDO::PARAM_INT);
             $stmt->bindParam(':id_categorie', $id_categorie);
-    
+
             if ($stmt->execute()) {
                 return ['success' => true, 'message' => 'Catégorie mise à jour avec succès'];
             } else {
@@ -100,14 +100,10 @@ class ProductController extends BaseController {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
-    
-    // Méthode pour récupérer les détails d'un produit par ID
+
     public function getProductById($productId) {
         try {
-            $query = "SELECT p.*, c.nom AS nom_categorie 
-                      FROM produits p
-                      LEFT JOIN category c ON p.id_categorie = c.id_categorie
-                      WHERE p.id_produit = :id_produit";
+            $query = "SELECT p.*, c.nom AS nom_categorie FROM produits p LEFT JOIN category c ON p.id_categorie = c.id_categorie WHERE p.id_produit = :id_produit";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':id_produit', $productId, PDO::PARAM_INT);
             $stmt->execute();
@@ -122,80 +118,79 @@ class ProductController extends BaseController {
         }
     }
 
-public function addProduct($name, $description, $price, $imageTmpName, $stock, $categoryId) {
-    try {
-        $query = "INSERT INTO produits (nom, description, prix, image, stock, id_categorie) 
-                  VALUES (:nom, :description, :prix, :image, :stock, :id_categorie)";
-        $stmt = $this->db->prepare($query);
+    public function addProduct($name, $description, $price, $imageTmpName, $stock, $categoryId) {
+        try {
+            $query = "INSERT INTO produits (nom, description, prix, image, stock, id_categorie) VALUES (:nom, :description, :prix, :image, :stock, :id_categorie)";
+            $stmt = $this->db->prepare($query);
 
-        // Read image file as binary data
-        $imageData = file_get_contents($imageTmpName);
-
-        $stmt->bindParam(':nom', $name);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':prix', $price);
-        $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
-        $stmt->bindParam(':stock', $stock);
-        $stmt->bindParam(':id_categorie', $categoryId);
-
-        if ($stmt->execute()) {
-            return ['success' => true, 'message' => 'Produit ajouté avec succès'];
-        } else {
-            return ['success' => false, 'error' => 'Échec de l\'ajout du produit: ' . implode(", ", $stmt->errorInfo())];
-        }
-    } catch (PDOException $e) {
-        return ['success' => false, 'error' => $e->getMessage()];
-    }
-}
-
-public function deleteProduct($productId) {
-    try {
-        $query = "DELETE FROM produits WHERE id_produit = :id_produit";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id_produit', $productId);
-        
-        if ($stmt->execute()) {
-            return ['success' => true, 'message' => 'Produit supprimé avec succès'];
-        } else {
-            return ['success' => false, 'error' => 'Échec de la suppression du produit: ' . implode(", ", $stmt->errorInfo())];
-        }
-    } catch (PDOException $e) {
-        return ['success' => false, 'error' => $e->getMessage()];
-    }
-}
-
-public function updateProduct($productId, $nom, $description, $prix, $imageTmpName, $stock, $id_categorie) {
-    try {
-        $query = "UPDATE produits SET nom = :nom, description = :description, prix = :prix, stock = :stock, id_categorie = :id_categorie";
-        if ($imageTmpName !== null) {
-            $query .= ", image = :image";
-        }
-        $query .= " WHERE id_produit = :id_produit";
-
-        $stmt = $this->db->prepare($query);
-
-        // Bind parameters
-        $stmt->bindParam(':nom', $nom);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':prix', $prix);
-        $stmt->bindParam(':stock', $stock);
-        $stmt->bindParam(':id_categorie', $id_categorie);
-        $stmt->bindParam(':id_produit', $productId);
-
-        // Bind image if provided
-        if ($imageTmpName !== null) {
+            // Read image file as binary data
             $imageData = file_get_contents($imageTmpName);
-            $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
-        }
 
-        if ($stmt->execute()) {
-            return ['success' => true];
-        } else {
-            return ['success' => false, 'error' => 'Échec de la mise à jour du produit: ' . implode(", ", $stmt->errorInfo())];
+            $stmt->bindParam(':nom', $name);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':prix', $price);
+            $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
+            $stmt->bindParam(':stock', $stock);
+            $stmt->bindParam(':id_categorie', $categoryId);
+
+            if ($stmt->execute()) {
+                return ['success' => true, 'message' => 'Produit ajouté avec succès'];
+            } else {
+                return ['success' => false, 'error' => 'Échec de l\'ajout du produit: ' . implode(", ", $stmt->errorInfo())];
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
-    } catch (PDOException $e) {
-        return ['success' => false, 'error' => $e->getMessage()];
     }
-}
+
+    public function deleteProduct($productId) {
+        try {
+            $query = "DELETE FROM produits WHERE id_produit = :id_produit";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id_produit', $productId);
+
+            if ($stmt->execute()) {
+                return ['success' => true, 'message' => 'Produit supprimé avec succès'];
+            } else {
+                return ['success' => false, 'error' => 'Échec de la suppression du produit: ' . implode(", ", $stmt->errorInfo())];
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function updateProduct($productId, $nom, $description, $prix, $imageTmpName, $stock, $id_categorie) {
+        try {
+            $query = "UPDATE produits SET nom = :nom, description = :description, prix = :prix, stock = :stock, id_categorie = :id_categorie";
+            if ($imageTmpName !== null) {
+                $query .= ", image = :image";
+            }
+            $query .= " WHERE id_produit = :id_produit";
+
+            $stmt = $this->db->prepare($query);
+
+            // Bind parameters
+            $stmt->bindParam(':nom', $nom);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':prix', $prix);
+            $stmt->bindParam(':stock', $stock);
+            $stmt->bindParam(':id_categorie', $id_categorie);
+            $stmt->bindParam(':id_produit', $productId);
+
+            // Bind image if provided
+            if ($imageTmpName !== null) {
+                $imageData = file_get_contents($imageTmpName);
+                $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
+            }
+
+            if ($stmt->execute()) {
+                return ['success' => true];
+            } else {
+                return ['success' => false, 'error' => 'Échec de la mise à jour du produit: ' . implode(", ", $stmt->errorInfo())];
+            }
+        } catch (PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
 }
 ?>
