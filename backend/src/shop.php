@@ -6,16 +6,17 @@ require_once 'controllers/ProductController.php';
 $productController = new ProductController();
 
 // Récupérer toutes les catégories
-$categories = $productController->getCategories();
+$resultCategories = $productController->getCategories();
+$categories = $resultCategories['categories'] ?? [];
 
 // Récupérer tous les produits ou filtrer par catégorie
 $categoryFilter = $_GET['category'] ?? '';
-$result = $productController->getAllProducts($categoryFilter);
-$products = $result['products'] ?? [];
+$resultProducts = $productController->getAllProducts($categoryFilter);
+$products = $resultProducts['products'] ?? [];
 
 // Debugging: Check the result of getAllProducts
-if (!$result['success']) {
-    echo "Erreur : " . $result['error'];
+if (!$resultProducts['success']) {
+    echo "Erreur : " . htmlspecialchars($resultProducts['error']);
 }
 
 // Message d'erreur ou de succès lors des opérations
@@ -45,19 +46,19 @@ $message = '';
             background-color: #fff; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
             display: flex; 
-            flex-direction: column; /* Aligner les éléments en colonne */
-            align-items: center; /* Centrer horizontalement les éléments */
+            flex-direction: column; 
+            align-items: center; 
         }
         .product img { 
             width: 100%; 
             height: auto; 
             border-radius: 8px; 
-            margin-bottom: 10px; /* Espacement entre l'image et le nom du produit */
+            margin-bottom: 10px; 
         }
         .product h2 { 
             font-size: 1.5rem; 
             margin-bottom: 10px; 
-            text-align: center; /* Centrer le texte */
+            text-align: center; 
         }
         .filter { 
             margin-bottom: 20px; 
@@ -87,7 +88,7 @@ $message = '';
                 <p>Aucun produit disponible pour le moment.</p>
             <?php else: ?>
                 <?php foreach ($products as $product): ?>
-                    <div class="product" data-id="<?php echo $product['id_produit']; ?>">
+                    <div class="product" data-id="<?php echo htmlspecialchars($product['id_produit']); ?>">
                         <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
                         <?php if (!empty($product['image'])): ?>
                             <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" />
