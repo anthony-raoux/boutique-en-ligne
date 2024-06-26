@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 require_once 'controllers/ProductController.php';
 
 $productController = new ProductController();
@@ -13,8 +12,12 @@ if ($cart) {
         $result = $productController->getProductById($product_id);
         if ($result['success']) {
             $product = $result['product'];
-            $product['quantity'] = $quantity;
-            $products[] = $product;
+
+            // Vérifier si $product est un tableau avant de l'ajouter à $products
+            if (is_array($product)) {
+                $product['quantity'] = $quantity;
+                $products[] = $product;
+            }
         }
     }
 }
@@ -43,58 +46,58 @@ if ($cart) {
 </head>
 <body>
 <?php require_once 'navbar.php'; ?>
-    <header></header>
-    <main>
-        <div class="cart">
-            <h1>Votre Panier</h1>
-            <?php if (empty($products)): ?>
-                <p>Votre panier est vide.</p>
-            <?php else: ?>
-                <?php foreach ($products as $product): ?>
-                    <div class="cart-item">
-                        <a href="details.php?product_id=<?php echo $product['id_produit']; ?>">
-                            <?php if (!empty($product['image'])): ?>
-                                <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" />
-                            <?php else: ?>
-                                <img src="placeholder.jpg" alt="Image indisponible" />
-                            <?php endif; ?>
-                        </a>
-                        <div class="cart-item-details">
-                            <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
-                            <p class="price">Prix: <?php echo htmlspecialchars($product['prix']); ?> €</p>
-                            <p class="quantity">Quantité: <?php echo htmlspecialchars($product['quantity']); ?></p>
-                        </div>
-                        <button class="remove-item" onclick="removeFromCart(<?php echo $product['id_produit']; ?>)">Supprimer</button>
+<header></header>
+<main>
+    <div class="cart">
+        <h1>Votre Panier</h1>
+        <?php if (empty($products)): ?>
+            <p>Votre panier est vide.</p>
+        <?php else: ?>
+            <?php foreach ($products as $product): ?>
+                <div class="cart-item">
+                    <a href="details.php?product_id=<?php echo htmlspecialchars($product['id_produit']); ?>">
+                        <?php if (!empty($product['image']) && is_string($product['image'])): ?>
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" />
+                        <?php else: ?>
+                            <img src="placeholder.jpg" alt="Image indisponible" />
+                        <?php endif; ?>
+                    </a>
+                    <div class="cart-item-details">
+                        <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
+                        <p class="price">Prix: <?php echo htmlspecialchars($product['prix']); ?> €</p>
+                        <p class="quantity">Quantité: <?php echo htmlspecialchars($product['quantity']['quantity']); ?></p>
                     </div>
-                <?php endforeach; ?>
-                <div class="checkout">
-                    <a href="checkout.php">Passer à la caisse</a>
+                    <button class="remove-item" onclick="removeFromCart(<?php echo htmlspecialchars($product['id_produit']); ?>)">Supprimer</button>
                 </div>
-            <?php endif; ?>
-        </div>
-    </main>
-    <footer></footer>
-    <script>
-        function removeFromCart(productId) {
-            fetch('remove_from_cart.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ product_id: productId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Erreur: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-            });
-        }
-    </script>
+            <?php endforeach; ?>
+            <div class="checkout">
+                <a href="checkout.php">Passer à la caisse</a>
+            </div>
+        <?php endif; ?>
+    </div>
+</main>
+<footer></footer>
+<script>
+    function removeFromCart(productId) {
+        fetch('remove_from_cart.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ product_id: productId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
+    }
+</script>
 </body>
 </html>
