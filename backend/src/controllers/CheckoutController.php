@@ -1,12 +1,5 @@
 <?php
-session_start();
-require_once __DIR__ . '/controllers/BaseController.php';
-
-
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit();
-}
+require_once __DIR__ . '/BaseController.php';
 
 class CheckoutController extends BaseController {
     public function checkout($user_id) {
@@ -37,10 +30,7 @@ class CheckoutController extends BaseController {
         $stmt = $this->db->prepare("DELETE FROM carts WHERE id = ?");
         $stmt->execute([$cart['id']]);
 
-        header('Location: order_confirmation.php?order_id=' . $order_id);
+        header('Location: ../src/order_confirmation.php?order_id=' . $order_id);
     }
 }
-
-$controller = new CheckoutController();
-$controller->checkout($_SESSION['user_id']);
 ?>

@@ -62,12 +62,12 @@ if (!isset($_SESSION['cart'])) {
             <p>Stock: <?php echo htmlspecialchars($product['stock']); ?></p>
             <p>Catégorie: <?php echo htmlspecialchars($product['nom_categorie']); ?></p>
 
-            <!-- Formulaire d'ajout au panier -->
-            <form id="add-to-cart-form">
-                <input type="hidden" name="product_id" value="<?php echo $product['id_produit']; ?>">
-                <input type="number" name="quantity" value="1" min="1" max="10"> <!-- Champ de quantité -->
-                <button type="submit">Ajouter au panier</button>
-            </form>
+            <form id="add-to-cart-form" action="addToCart.php" method="POST">
+    <input type="hidden" name="product_id" value="<?php echo $product['id_produit']; ?>">
+    <input type="number" name="quantity" value="1" min="1" max="10"> <!-- Champ de quantité -->
+    <button type="submit">Ajouter au panier</button>
+</form>
+
 
             <?php
             // Vérifier si le produit est dans le panier
@@ -78,51 +78,6 @@ if (!isset($_SESSION['cart'])) {
         </div>
     </main>
     <footer></footer>
-    <script>
-        document.getElementById('add-to-cart-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            // Récupérer les données du formulaire
-            var formData = new FormData(this);
-
-            // Envoyer les données via fetch
-            fetch('add_to_cart.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Produit ajouté au panier!');
-                } else {
-                    alert('Erreur: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-            });
-        });
-
-        function removeFromCart(productId) {
-            fetch('remove_from_cart.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ product_id: productId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Erreur: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-            });
-        }
-    </script>
+  
 </body>
 </html>

@@ -42,7 +42,7 @@ $cartItemCount = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
             <li><a href="shop.php" class="<?php echo ($currentPage === 'shop') ? 'active' : ''; ?>">Shop</a></li>
             <?php if ($loggedIn) : ?>
                 <li><a href="profile.php" class="<?php echo ($currentPage === 'profile') ? 'active' : ''; ?>">Profile</a></li>
-                <li><a href="cart.php" class="<?php echo ($currentPage === 'cart') ? 'active' : ''; ?>">Cart (<?php echo $cartItemCount; ?>)</a></li>
+                <li><a href="cart_detail.php" class="<?php echo ($currentPage === 'cart') ? 'active' : ''; ?>">Cart (<?php echo $cartItemCount; ?>)</a></li>
                 <li><a href="logout.php">Logout</a></li>
             <?php elseif ($adminLoggedIn) : ?>
                 <li><a href="dashboard.php" class="<?php echo ($currentPage === 'dashboard') ? 'active' : ''; ?>">Dashboard</a></li>
