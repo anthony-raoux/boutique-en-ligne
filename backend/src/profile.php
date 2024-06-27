@@ -2,8 +2,10 @@
 session_start(); // Assurez-vous que la session est démarrée
 
 require_once './controllers/AuthController.php';
+require_once './controllers/HistoriqueAchatsController.php'; // Inclure le contrôleur de l'historique des achats
 
 $authController = new AuthController();
+$historiqueController = new HistoriqueAchatsController();
 
 // Vérifiez si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
@@ -37,8 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<div style='color: red;'>Error: " . $result['error'] . "</div>";
     }
 }
-?>
 
+// Récupérez l'historique des achats de l'utilisateur
+$orders = $historiqueController->getOrderHistory($user_id);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Profile</title>
 </head>
 <body>
-<?php require_once 'navbar.php'; ?>
+    <?php require_once 'navbar.php'; ?>
     <h1>Profile</h1>
     <p>Welcome, <?php echo $user['prenom'] . ' ' . $user['nom']; ?></p>
     
@@ -79,5 +83,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <button type="submit">Update Profile</button>
     </form>
+
+    <!-- Affichage de l'historique des achats -->
+    <h2>Historique des Achats</h2>
+    <ul>
+    <?php foreach ($orders as $order): ?>
+    <li>Order #<?php echo $order['id']; ?> - Status: <?php echo $order['payment_status']; ?>
+        <?php if (isset($order['items']) && !empty($order['items'])): ?>
+            <ul>
+                <?php foreach ($order['items'] as $item): ?>
+                    <li>
+                        <?php echo $item['quantity'] . ' x ' . $item['name'] . ' - $' . $item['price']; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <ul>
+                <li>No items found.</li>
+            </ul>
+        <?php endif; ?>
+    </li>
+<?php endforeach; ?>
+                
+    </ul>
+
+    <a href="historique_achats.php">Voir l'historique complet des achats</a>
 </body>
 </html>
