@@ -38,7 +38,6 @@ class ProductController extends BaseController {
         }
     }
 
-  
     public function getCategories() {
         try {
             $sql = "SELECT * FROM category";
@@ -118,10 +117,18 @@ class ProductController extends BaseController {
         }
     }
 
+    public function searchProducts($query) {
+        $stmt = $this->conn->prepare("SELECT id_produit, nom FROM produits WHERE nom LIKE ?");
+        $stmt->execute(["%$query%"]);
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $products;
+    }
+    
+
     public function addProduct($name, $description, $price, $imageTmpName, $stock, $categoryId) {
         try {
             $query = "INSERT INTO produits (nom, description, prix, image, stock, id_categorie) VALUES (:nom, :description, :prix, :image, :stock, :id_categorie)";
-            $stmt = $this->db->prepare($query);
+            $stmt = $this->conn->prepare($query);
 
             // Read image file as binary data
             $imageData = file_get_contents($imageTmpName);
@@ -146,7 +153,7 @@ class ProductController extends BaseController {
     public function deleteProduct($productId) {
         try {
             $query = "DELETE FROM produits WHERE id_produit = :id_produit";
-            $stmt = $this->db->prepare($query);
+            $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':id_produit', $productId);
 
             if ($stmt->execute()) {
@@ -167,7 +174,7 @@ class ProductController extends BaseController {
             }
             $query .= " WHERE id_produit = :id_produit";
 
-            $stmt = $this->db->prepare($query);
+            $stmt = $this->conn->prepare($query);
 
             // Bind parameters
             $stmt->bindParam(':nom', $nom);
