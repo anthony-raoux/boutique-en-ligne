@@ -28,6 +28,9 @@ if (!$product) {
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
+
+// Vérifier si le produit est déjà dans le panier
+$inCart = array_key_exists($product_id, $_SESSION['cart']);
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +50,7 @@ if (!isset($_SESSION['cart'])) {
     </style>
 </head>
 <body>
-<?php require_once 'navbar.php'; ?>
+    <?php require_once 'navbar.php'; ?>
     <header></header>
     <main>
         <div class="product-details">
@@ -63,21 +66,20 @@ if (!isset($_SESSION['cart'])) {
             <p>Catégorie: <?php echo htmlspecialchars($product['nom_categorie']); ?></p>
 
             <form id="add-to-cart-form" action="addToCart.php" method="POST">
-    <input type="hidden" name="product_id" value="<?php echo $product['id_produit']; ?>">
-    <input type="number" name="quantity" value="1" min="1" max="10"> <!-- Champ de quantité -->
-    <button type="submit">Ajouter au panier</button>
-</form>
+                <input type="hidden" name="product_id" value="<?php echo $product['id_produit']; ?>">
+                <input type="number" name="quantity" value="1" min="1" max="10"> <!-- Champ de quantité -->
+                <button type="submit">Ajouter au panier</button>
+            </form>
 
-
-            <?php
-            // Vérifier si le produit est dans le panier
-            if (array_key_exists($product_id, $_SESSION['cart'])) {
-                echo '<button class="remove-item" onclick="removeFromCart(' . $product['id_produit'] . ')">Supprimer</button>';
-            }
-            ?>
+            <!-- Formulaire pour supprimer le produit du panier -->
+            <?php if ($inCart) : ?>
+                <form id="remove-from-cart-form" action="removeFromCart.php" method="POST">
+                    <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                    <button type="submit">Supprimer du panier</button>
+                </form>
+            <?php endif; ?>
         </div>
     </main>
     <footer></footer>
-  
 </body>
 </html>

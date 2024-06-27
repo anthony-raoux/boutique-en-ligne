@@ -1,17 +1,21 @@
 <?php
 session_start();
-require_once './controllers/CartDetailController.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['product_id'])) {
-        $product_id = $_POST['product_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
+    $product_id = $_POST['product_id'];
 
-        // Instancier le contrôleur CartDetailController
-        $controller = new CartDetailController();
-        $controller->removeFromCart($_SESSION['user_id'], $product_id);
-
-        // Redirection vers la page du panier après la suppression
-        header('Location: cart_detail.php');
-        exit;
+    // Vérifier si le produit existe dans le panier
+    if (array_key_exists($product_id, $_SESSION['cart'])) {
+        // Supprimer le produit du panier
+        unset($_SESSION['cart'][$product_id]);
     }
+
+    // Rediriger vers la page de détails du produit après la suppression
+    header('Location: details.php?product_id=' . $product_id);
+    exit;
+} else {
+    // Redirection en cas de tentative d'accès direct à ce fichier sans POST
+    header('Location: index.php');
+    exit;
 }
+?>
