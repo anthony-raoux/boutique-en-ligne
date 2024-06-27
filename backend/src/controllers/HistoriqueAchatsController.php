@@ -33,4 +33,3 @@ class HistoriqueAchatsController extends BaseController {
     }
 }
 ?>
-

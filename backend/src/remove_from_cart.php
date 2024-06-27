@@ -1,24 +1,17 @@
 <?php
 session_start();
+require_once './controllers/CartDetailController.php';
 
-$data = json_decode(file_get_contents('php://input'), true);
-$product_id = $data['product_id'] ?? null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['product_id'])) {
+        $product_id = $_POST['product_id'];
 
-if (!$product_id) {
-    echo json_encode(['success' => false, 'error' => 'Produit non trouvé']);
-    exit;
+        // Instancier le contrôleur CartDetailController
+        $controller = new CartDetailController();
+        $controller->removeFromCart($_SESSION['user_id'], $product_id);
+
+        // Redirection vers la page du panier après la suppression
+        header('Location: cart_detail.php');
+        exit;
+    }
 }
-
-// Supprimer le produit du panier
-if (isset($_SESSION['cart'][$product_id])) {
-    unset($_SESSION['cart'][$product_id]);
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'error' => 'Produit non trouvé dans le panier']);
-}
-
-// Supprimer le produit du panier dans la base de données
-$query = $db->prepare('DELETE FROM ligne_de_commande WHERE user_id = ? AND product_id = ?');
-$query->execute([$user_id, $product_id]);
-
-?>
