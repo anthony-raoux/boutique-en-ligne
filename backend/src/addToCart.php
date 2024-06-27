@@ -21,7 +21,7 @@ $user_id = $_SESSION['user_id'] ?? null;
 $controller = new AddToCartController();
 
 // Appeler la méthode addToCart pour ajouter le produit au panier
-$controller->addToCart($product_id, $user_id);
+$controller->addToCart($product_id, $quantity, $user_id);
 
 // Redirection vers la page de détail du panier ou une autre page appropriée après l'ajout au panier
 ?>

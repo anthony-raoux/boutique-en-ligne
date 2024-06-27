@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../controllers/SimulatePaymentController.php';
+require_once __DIR__ . '/./controllers/SimulatePaymentController.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
