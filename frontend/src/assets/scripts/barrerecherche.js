@@ -1,39 +1,43 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('search');
-    const autocompleteList = document.getElementById('autocomplete-list');
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const suggestionsList = document.getElementById('suggestions-list');
 
-    // Au chargement de la page, affiche tous les produits disponibles
-    displayAllProducts();
+    searchInput.addEventListener('input', function() {
+        const inputValue = this.value.trim();
 
-    async function displayAllProducts() {
-        try {
-            const products = await fetchProducts();
-            showProducts(products);
-        } catch (error) {
-            console.error('Erreur lors de la récupération des produits:', error);
+        if (inputValue.length === 0) {
+            suggestionsList.innerHTML = '';
+            suggestionsList.style.display = 'none';
+            return;
         }
+
+        fetchSuggestions(inputValue)
+            .then(response => response.json())
+            .then(data => {
+                displaySuggestions(data);
+            })
+            .catch(error => {
+                console.error('Error fetching suggestions:', error);
+            });
+    });
+
+    function fetchSuggestions(query) {
+        return fetch('search.php?q=' + encodeURIComponent(query))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response;
+            });
     }
 
-    async function fetchProducts() {
-        try {
-            const response = await fetch('https://localhost/boutique_en_ligne/produits');
-            if (response.ok) {
-                return await response.json();
-            } else {
-                console.error('Erreur de réponse du serveur:', response.statusText);
-                return [];
-            }
-        } catch (error) {
-            console.error('Erreur de fetch:', error);
-            return [];
+    function displaySuggestions(suggestions) {
+        if (suggestions.length === 0) {
+            suggestionsList.innerHTML = '<li>No suggestions found</li>';
+        } else {
+            const items = suggestions.map(item => `<li>${item}</li>`).join('');
+            suggestionsList.innerHTML = items;
         }
-    }
-
-    function showProducts(products) {
-        products.forEach(product => {
-            const productItem = document.createElement('div');
-            productItem.textContent = `${product.name} - ${product.price} €`; // Exemple : afficher le nom et le prix du produit
-            autocompleteList.appendChild(productItem);
-        });
+        suggestionsList.style.display = 'block';
     }
 });
