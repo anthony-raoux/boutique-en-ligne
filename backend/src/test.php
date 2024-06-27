@@ -15,9 +15,8 @@ if (!$product_id) {
     exit;
 }
 
-// Récupérer les détails du produit
+// Juste après avoir récupéré le produit
 $product = $productController->getProductById($product_id);
-$product = $product['product'] ?? null; // S'assurer que nous récupérons bien le produit à partir du tableau renvoyé
 if (!$product) {
     echo "Produit non trouvé ou erreur de récupération.";
     exit;
@@ -43,16 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     $commentaire = $_POST['commentaire'];
     $note = intval($_POST['note']);
     $id_utilisateur = $_SESSION['user_id']; // Assurez-vous que l'utilisateur est connecté
-    $prenom_utilisateur = isset($_SESSION['user_prenom']) ? $_SESSION['user_prenom'] : 'Utilisateur anonyme'; // Assurez-vous que le prénom de l'utilisateur est stocké dans la session
 
     // Insérer le commentaire et la note dans la base de données
-    $sql = "INSERT INTO avis (commentaire, note, id_utilisateur, prenom_utilisateur, id_produit, created_at) VALUES (?, ?, ?, ?, ?, NOW())";
+    $sql = "INSERT INTO avis (commentaire, note, id_utilisateur, id_produit) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(1, $commentaire);
     $stmt->bindParam(2, $note);
     $stmt->bindParam(3, $id_utilisateur);
-    $stmt->bindParam(4, $prenom_utilisateur);
-    $stmt->bindParam(5, $id_produit);
+    $stmt->bindParam(4, $id_produit);
     $stmt->execute();
 }
 ?>
@@ -81,18 +78,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     <main>
         <div class="product-details">
             <?php if (!empty($product['image'])): ?>
-                <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" />
+                <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom'] ?? 'Image indisponible'); ?>" />
             <?php else: ?>
                 <img src="placeholder.jpg" alt="Image indisponible" />
             <?php endif; ?>
-            <h1><?php echo htmlspecialchars($product['nom']); ?></h1>
-            <p><?php echo htmlspecialchars($product['description']); ?></p>
-            <p class="price">Prix: <?php echo htmlspecialchars($product['prix']); ?> €</p>
-            <p>Stock: <?php echo htmlspecialchars($product['stock']); ?></p>
-            <p>Catégorie: <?php echo htmlspecialchars($product['nom_categorie']); ?></p>
+            <h1><?php echo htmlspecialchars($product['nom'] ?? 'Nom indisponible'); ?></h1>
+            <p><?php echo htmlspecialchars($product['description'] ?? 'Description indisponible'); ?></p>
+            <p class="price">Prix: <?php echo htmlspecialchars($product['prix'] ?? 'Prix indisponible'); ?> €</p>
+            <p>Stock: <?php echo htmlspecialchars($product['stock'] ?? 'Stock indisponible'); ?></p>
+            <p>Catégorie: <?php echo htmlspecialchars($product['nom_categorie'] ?? 'Catégorie indisponible'); ?></p>
 
             <form id="add-to-cart-form" action="addToCart.php" method="POST">
-                <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id_produit']); ?>">
+                <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id_produit'] ?? ''); ?>">
                 <input type="number" name="quantity" value="1" min="1" max="10"> <!-- Champ de quantité -->
                 <button type="submit">Ajouter au panier</button>
             </form>
@@ -127,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
             <div class="reviews">
                 <h3>Commentaires :</h3>
                 <?php
-                $sql = "SELECT commentaire, note, prenom_utilisateur, created_at FROM avis WHERE id_produit = ?";
+                $sql = "SELECT commentaire, note, id_utilisateur FROM avis WHERE id_produit = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(1, $id_produit);
                 $stmt->execute();
@@ -136,8 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
                 foreach ($result as $row) {
                     echo '<div class="review">';
                     echo '<p>Note : ' . htmlspecialchars($row['note']) . '/5</p>';
-                    echo '<p>Par : ' . (isset($row['prenom_utilisateur']) ? htmlspecialchars($row['prenom_utilisateur']) : 'Utilisateur anonyme') . ' le ' . htmlspecialchars($row['created_at']) . '</p>';
-                    echo '<p>' . (isset($row['commentaire']) ? htmlspecialchars($row['commentaire']) : 'Commentaire non disponible') . '</p>';
+                    echo '<p>' . htmlspecialchars($row['commentaire']) . '</p>';
                     echo '</div>';
                 }
                 ?>

@@ -48,7 +48,7 @@ function isActivePage($pageName, $currentPage) {
             <li><a href="shop.php" class="<?= isActivePage('shop', $currentPage); ?>">Shop</a></li>
             <?php if ($loggedIn) : ?>
                 <li><a href="profile.php" class="<?= isActivePage('profile', $currentPage); ?>">Profile</a></li>
-                <li><a href="cart_detail.php" class="<?= isActivePage('cart', $currentPage); ?>">Cart (<?= $cartItemCount; ?>)</a></li>
+                <li><a href="cart_detail.php" class="<?= isActivePage('cart', $currentPage); ?>">Cart (<span id="cartItemCount"><?= $cartItemCount; ?></span>)</a></li>
                 <li><a href="logout.php">Logout</a></li>
             <?php elseif ($adminLoggedIn) : ?>
                 <li><a href="dashboard.php" class="<?= isActivePage('dashboard', $currentPage); ?>">Dashboard</a></li>
@@ -69,6 +69,7 @@ function isActivePage($pageName, $currentPage) {
         <ul class="suggestions" id="suggestions-list"></ul>
     </div>
 
-    <script src="../frontend/src/assets/scripts/barrerecherche.js"></script> <!-- Assurez-vous que le chemin vers votre fichier JavaScript est correct -->
+    <script src="../frontend/src/assets/scripts/barrerecherche.js"></script>
+    <script src="../frontend/src/assets/scripts/cart.js"></script> <!-- Assurez-vous que le chemin vers votre fichier JavaScript est correct -->
 </body>
 </html>
