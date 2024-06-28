@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($loginResult['success']) {
             $_SESSION['admin_id'] = $loginResult['admin_id'];
+            $_SESSION['admin_prenom'] = $loginResult['prenom']; // Stocker le prénom de l'admin dans la session
             header("Location: dashboard.php");
             exit();
         }
@@ -45,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($loginResult['success']) {
             $_SESSION['user_id'] = $loginResult['user_id'];
+            $_SESSION['user_prenom'] = $loginResult['prenom']; // Stocker le prénom de l'utilisateur dans la session
             header("Location: profile.php");
             exit();
         }

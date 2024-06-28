@@ -6,46 +6,36 @@ require_once 'config/Database.php';
 
 $productController = new ProductController();
 
-// Récupérer l'ID du produit depuis les paramètres GET
 $product_id = $_GET['product_id'] ?? '';
-
-// Vérifier si product_id est vide ou non défini
 if (!$product_id) {
     echo "ID de produit manquant.";
     exit;
 }
 
-// Récupérer les détails du produit
 $product = $productController->getProductById($product_id);
-$product = $product['product'] ?? null; // S'assurer que nous récupérons bien le produit à partir du tableau renvoyé
+$product = $product['product'] ?? null;
 if (!$product) {
     echo "Produit non trouvé ou erreur de récupération.";
     exit;
 }
 
-// Initialisation du panier s'il n'existe pas déjà en session
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Vérifier si le produit est déjà dans le panier
 $inCart = array_key_exists($product_id, $_SESSION['cart']);
 
-// Connexion à la base de données
 $database = new Database();
 $conn = $database->connect();
 
-// Obtenir l'ID du produit pour les commentaires
 $id_produit = $product_id;
 
-// Si le formulaire est soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     $commentaire = $_POST['commentaire'];
     $note = intval($_POST['note']);
-    $id_utilisateur = $_SESSION['user_id']; // Assurez-vous que l'utilisateur est connecté
-    $prenom_utilisateur = isset($_SESSION['user_prenom']) ? $_SESSION['user_prenom'] : 'Utilisateur anonyme'; // Assurez-vous que le prénom de l'utilisateur est stocké dans la session
+    $id_utilisateur = $_SESSION['user_id'];
+    $prenom_utilisateur = isset($_SESSION['user_prenom']) ? $_SESSION['user_prenom'] : 'Utilisateur anonyme';
 
-    // Insérer le commentaire et la note dans la base de données
     $sql = "INSERT INTO avis (commentaire, note, id_utilisateur, prenom_utilisateur, id_produit, created_at) VALUES (?, ?, ?, ?, ?, NOW())";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(1, $commentaire);
@@ -93,11 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
 
             <form id="add-to-cart-form" action="addToCart.php" method="POST">
                 <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id_produit']); ?>">
-                <input type="number" name="quantity" value="1" min="1" max="10"> <!-- Champ de quantité -->
+                <input type="number" name="quantity" value="1" min="1" max="10">
                 <button type="submit">Ajouter au panier</button>
             </form>
 
-            <!-- Formulaire pour supprimer le produit du panier -->
             <?php if ($inCart) : ?>
                 <form id="remove-from-cart-form" action="removeFromCart.php" method="POST">
                     <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product_id); ?>">
@@ -105,7 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
                 </form>
             <?php endif; ?>
 
-            <!-- Formulaire de soumission de commentaire et de note -->
             <?php if (isset($_SESSION['user_id'])): ?>
                 <form action="details.php?product_id=<?= $id_produit ?>" method="POST">
                     <textarea name="commentaire" required placeholder="Votre commentaire"></textarea>
@@ -123,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
                 <p>Veuillez <a href="login.php">vous connecter</a> pour laisser un commentaire.</p>
             <?php endif; ?>
 
-            <!-- Afficher les commentaires existants -->
             <div class="reviews">
                 <h3>Commentaires :</h3>
                 <?php
@@ -147,3 +134,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     <footer></footer>
 </body>
 </html>
+

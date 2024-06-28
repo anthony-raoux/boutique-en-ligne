@@ -27,23 +27,53 @@ class AuthController extends BaseController {
         }
     }
 
-    public function loginUser($email, $mot_de_passe) {
-        try {
-            $query = "SELECT * FROM Utilisateur WHERE email = :email";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
+    // Authentification pour les utilisateurs
+public function loginUser($email, $mot_de_passe) {
+    try {
+        $query = "SELECT * FROM Utilisateur WHERE email = :email";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
 
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
-                return ['success' => true, 'user_id' => $user['id_utilisateur']];
-            } else {
-                return ['success' => false, 'error' => 'Invalid email or password'];
-            }
-        } catch (PDOException $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
+            return [
+                'success' => true,
+                'user_id' => $user['id_utilisateur'],
+                'prenom' => $user['prenom'] // Ajouter le prénom de l'utilisateur
+            ];
+        } else {
+            return ['success' => false, 'error' => 'Invalid email or password'];
         }
+    } catch (PDOException $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
     }
+}
+
+    // Authentification pour les administrateurs
+public function loginAdmin($email, $mot_de_passe) {
+    try {
+        $query = "SELECT * FROM Administrateur WHERE email = :email";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($admin && password_verify($mot_de_passe, $admin['mot_de_passe'])) {
+            return [
+                'success' => true,
+                'admin_id' => $admin['id_administrateur'],
+                'prenom' => $admin['prenom'], // Ajouter le prénom de l'admin
+                'role' => 'admin'
+            ];
+        } else {
+            return ['success' => false, 'error' => 'Invalid email or password'];
+        }
+    } catch (PDOException $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
 
     public function getProfile($id_utilisateur) {
         try {
@@ -99,25 +129,7 @@ class AuthController extends BaseController {
         }
     }
 
-    // Authentification pour les administrateurs
-    public function loginAdmin($email, $mot_de_passe) {
-        try {
-            $query = "SELECT * FROM Administrateur WHERE email = :email";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
-
-            $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($admin && password_verify($mot_de_passe, $admin['mot_de_passe'])) {
-                return ['success' => true, 'admin_id' => $admin['id_administrateur'], 'role' => 'admin'];
-            } else {
-                return ['success' => false, 'error' => 'Invalid email or password'];
-            }
-        } catch (PDOException $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
-    }
-
+ 
     public function getUserById($id_utilisateur) {
         try {
             $query = "SELECT * FROM Utilisateur WHERE id_utilisateur = :id";

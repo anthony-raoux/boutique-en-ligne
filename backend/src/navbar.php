@@ -52,6 +52,7 @@ function isActivePage($pageName, $currentPage) {
                 <li><a href="logout.php">Logout</a></li>
             <?php elseif ($adminLoggedIn) : ?>
                 <li><a href="dashboard.php" class="<?= isActivePage('dashboard', $currentPage); ?>">Dashboard</a></li>
+                <li><a href="admin_reviews.php" class="<?= isActivePage('admin_reviews', $currentPage); ?>">Modérer les avis</a></li>
                 <li><a href="logout.php">Logout</a></li>
             <?php else : ?>
                 <li><a href="login.php" class="<?= isActivePage('login', $currentPage); ?>">Login</a></li>
