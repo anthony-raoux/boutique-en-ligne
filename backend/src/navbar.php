@@ -48,6 +48,7 @@ function isActivePage($pageName, $currentPage) {
             <li><a href="shop.php" class="<?= isActivePage('shop', $currentPage); ?>">Shop</a></li>
             <?php if ($loggedIn) : ?>
                 <li><a href="profile.php" class="<?= isActivePage('profile', $currentPage); ?>">Profile</a></li>
+                <li><a href="wishlist.php" class="<?= isActivePage('wishlist', $currentPage); ?>">Wishlist</a></li>
                 <li><a href="cart_detail.php" class="<?= isActivePage('cart', $currentPage); ?>">Cart (<span id="cartItemCount"><?= $cartItemCount; ?></span>)</a></li>
                 <li><a href="logout.php">Logout</a></li>
             <?php elseif ($adminLoggedIn) : ?>

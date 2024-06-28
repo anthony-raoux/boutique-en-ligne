@@ -11,7 +11,7 @@ class CartDetailController extends BaseController {
     }
 
     public function getCartDetails($user_id) {
-        // Récupérer les détails du panier de l'utilisateur
+        // Récupérer les détails du panier de l'utilisateur depuis la base de données (exemple)
         $stmt = $this->db->prepare("
             SELECT p.id_produit, p.nom, p.prix, ci.quantity 
             FROM cart_items ci 

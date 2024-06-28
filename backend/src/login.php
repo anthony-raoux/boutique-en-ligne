@@ -54,6 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Si les deux échouent, afficher un message d'erreur
         $loginError = $loginResult['error'];
     }
+
+    $error_message = '';
+    if (isset($_GET['error'])) {
+        if ($_GET['error'] == 'not_logged_in') {
+            $error_message = 'Vous devez être connecté pour ajouter des produits au panier.';
+        }
+    }
 }
 ?>
 

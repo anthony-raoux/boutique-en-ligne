@@ -2,9 +2,13 @@
 session_start();
 
 require_once 'controllers/ProductController.php';
+require_once 'controllers/WishlistController.php';
 require_once 'config/Database.php';
 
 $productController = new ProductController();
+$database = new Database();
+$conn = $database->connect();
+$wishlistController = new WishlistController($conn);
 
 $product_id = $_GET['product_id'] ?? '';
 if (!$product_id) {
@@ -25,25 +29,37 @@ if (!isset($_SESSION['cart'])) {
 
 $inCart = array_key_exists($product_id, $_SESSION['cart']);
 
-$database = new Database();
-$conn = $database->connect();
-
 $id_produit = $product_id;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
-    $commentaire = $_POST['commentaire'];
-    $note = intval($_POST['note']);
-    $id_utilisateur = $_SESSION['user_id'];
-    $prenom_utilisateur = isset($_SESSION['user_prenom']) ? $_SESSION['user_prenom'] : 'Utilisateur anonyme';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['submit_review'])) {
+        $commentaire = $_POST['commentaire'];
+        $note = intval($_POST['note']);
+        $id_utilisateur = $_SESSION['user_id'];
+        $prenom_utilisateur = isset($_SESSION['user_prenom']) ? $_SESSION['user_prenom'] : 'Utilisateur anonyme';
 
-    $sql = "INSERT INTO avis (commentaire, note, id_utilisateur, prenom_utilisateur, id_produit, created_at) VALUES (?, ?, ?, ?, ?, NOW())";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(1, $commentaire);
-    $stmt->bindParam(2, $note);
-    $stmt->bindParam(3, $id_utilisateur);
-    $stmt->bindParam(4, $prenom_utilisateur);
-    $stmt->bindParam(5, $id_produit);
-    $stmt->execute();
+        $sql = "INSERT INTO avis (commentaire, note, id_utilisateur, prenom_utilisateur, id_produit, created_at) VALUES (?, ?, ?, ?, ?, NOW())";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $commentaire);
+        $stmt->bindParam(2, $note);
+        $stmt->bindParam(3, $id_utilisateur);
+        $stmt->bindParam(4, $prenom_utilisateur);
+        $stmt->bindParam(5, $id_produit);
+        $stmt->execute();
+    } elseif (isset($_POST['add_to_wishlist'])) {
+        $wishlistController->addToWishlist($_SESSION['user_id'], $product_id);
+    } elseif (isset($_POST['remove_from_wishlist'])) {
+        $wishlistController->removeFromWishlist($_SESSION['user_id'], $product_id);
+    }
+}
+
+$inWishlist = false;
+$wishlist = $wishlistController->getWishlist($_SESSION['user_id']);
+foreach ($wishlist as $item) {
+    if ($item['id_produit'] == $product_id) {
+        $inWishlist = true;
+        break;
+    }
 }
 ?>
 
@@ -61,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
         .product-details p { font-size: 1rem; line-height: 1.5; }
         .product-details .price { font-size: 1.5rem; font-weight: bold; color: #007bff; }
         .product-details .add-to-cart { margin-top: 20px; }
+        .wishlist-btn { margin-top: 20px; }
         .reviews { margin-top: 40px; }
         .review { border-top: 1px solid #ccc; padding: 10px 0; }
     </style>
@@ -92,6 +109,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
                     <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product_id); ?>">
                     <button type="submit">Supprimer du panier</button>
                 </form>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <div class="wishlist-btn">
+                    <?php if ($inWishlist): ?>
+                        <form action="details.php?product_id=<?= $product_id ?>" method="POST">
+                            <button type="submit" name="remove_from_wishlist">Retirer de la wishlist</button>
+                        </form>
+                    <?php else: ?>
+                        <form action="details.php?product_id=<?= $product_id ?>" method="POST">
+                            <button type="submit" name="add_to_wishlist">Ajouter à la wishlist</button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+            <?php else: ?>
+                <p>Veuillez <a href="login.php">vous connecter</a> pour ajouter des produits à votre wishlist.</p>
             <?php endif; ?>
 
             <?php if (isset($_SESSION['user_id'])): ?>
@@ -134,4 +167,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_review'])) {
     <footer></footer>
 </body>
 </html>
-
