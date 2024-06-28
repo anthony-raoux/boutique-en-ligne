@@ -7,13 +7,13 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require_once 'controllers/WishlistController.php';
-require_once 'controllers/AddToCartController.php'; // Ajoutez le contrôleur pour gérer l'ajout au panier
+require_once 'controllers/AddToCartController.php';
 require_once 'config/Database.php';
 
 $database = new Database();
 $db = $database->connect();
 $wishlistController = new WishlistController($db);
-$addToCartController = new AddToCartController($db); // Instanciez le contrôleur pour l'ajout au panier
+$addToCartController = new AddToCartController($db);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['remove_from_wishlist'])) {
@@ -24,11 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Action : Ajouter au panier
         $product_id = $_POST['product_id'];
         $addToCartController->addToCart($product_id, 1, $_SESSION['user_id']);
-    }
+        // Après avoir ajouté au panier, retirer de la wishlist
+        $wishlistController->removeFromWishlist($_SESSION['user_id'], $product_id);
 
-    // Redirection vers la page actuelle pour éviter le re-postage des données
-    header('Location: wishlist.php');
-    exit;
+        // Redirection vers la wishlist après l'action pour éviter le re-postage
+        header('Location: wishlist.php');
+        exit;
+    }
 }
 
 $wishlist = $wishlistController->getWishlist($_SESSION['user_id']);
@@ -51,27 +53,28 @@ $wishlist = $wishlistController->getWishlist($_SESSION['user_id']);
         <?php if (count($wishlist) > 0): ?>
             <ul>
             <?php foreach ($wishlist as $product): ?>
-    <li>
-        <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
-        <p><?php echo htmlspecialchars($product['description']); ?></p>
-        <p>Prix: <?php echo htmlspecialchars($product['prix']); ?> €</p>
-        <form action="addToCart.php" method="POST">
-            <input type="hidden" name="product_id" value="<?= $product['id_produit'] ?>">
-            <button type="submit" name="addToCart">Ajouter au panier</button>
-        </form>
-        <form action="wishlist.php" method="POST">
-            <input type="hidden" name="product_id" value="<?= $product['id_produit'] ?>">
-            <button type="submit" name="remove_from_wishlist">Retirer de la wishlist</button>
-        </form>
-    </li>
-<?php endforeach; ?>
-
+                <li>
+                    <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
+                    <p><?php echo htmlspecialchars($product['description']); ?></p>
+                    <p>Prix: <?php echo htmlspecialchars($product['prix']); ?> €</p>
+                    <form action="wishlist.php" method="POST">
+                        <input type="hidden" name="product_id" value="<?= $product['id_produit'] ?>">
+                        <button type="submit" name="remove_from_wishlist">Retirer de la wishlist</button>
+                    </form>
+                    <form action="wishlist.php" method="POST">
+                        <input type="hidden" name="product_id" value="<?= $product['id_produit'] ?>">
+                        <button type="submit" name="add_to_cart">Ajouter au panier</button>
+                    </form>
+                </li>
+            <?php endforeach; ?>
             </ul>
         <?php else: ?>
             <p>Votre wishlist est vide.</p>
         <?php endif; ?>
     </div>
 
-    <script src="path/to/your/js/wishlist.js"></script>
+    <script>
+        
+    </script>
 </body>
 </html>
