@@ -24,13 +24,17 @@ function isActivePage($pageName, $currentPage) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recherche de produits</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Ajout du lien vers votre fichier CSS -->
+    <link rel="stylesheet" href="styles.css"> <!-- Incluez votre fichier CSS -->
     <style>
         .suggestions {
             list-style-type: none;
             padding: 0;
             margin: 0;
             border: 1px solid #ccc;
+            position: absolute;
+            background-color: #fff;
+            width: 100%;
+            z-index: 1;
         }
         .suggestions li {
             padding: 10px;
@@ -63,15 +67,72 @@ function isActivePage($pageName, $currentPage) {
             <li>Session status: <?= session_status() === PHP_SESSION_ACTIVE ? 'Active' : 'Not active'; ?></li>
             <li>User ID: <?= isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'Not set'; ?></li>
             <li>Admin ID: <?= isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : 'Not set'; ?></li>
+
+            <!-- Barre de recherche -->
+            <li>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Rechercher des produits...">
+                    <ul class="suggestions" id="suggestions-list"></ul>
+                </div>
+            </li>
         </ul>
     </nav>
 
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Rechercher des produits...">
-        <ul class="suggestions" id="suggestions-list"></ul>
-    </div>
 
-    <script src="../frontend/src/assets/scripts/barrerecherche.js"></script>
-    <script src="../frontend/src/assets/scripts/cart.js"></script> <!-- Assurez-vous que le chemin vers votre fichier JavaScript est correct -->
 </body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const suggestionsList = document.getElementById('suggestions-list');
+
+    searchInput.addEventListener('input', function() {
+        const inputValue = this.value.trim();
+
+        if (inputValue.length === 0) {
+            suggestionsList.innerHTML = '';
+            suggestionsList.style.display = 'none';
+            return;
+        }
+
+        fetchSuggestions(inputValue)
+            .then(response => response.json())
+            .then(data => {
+                displaySuggestions(data);
+            })
+            .catch(error => {
+                console.error('Error fetching suggestions:', error);
+            });
+    });
+
+    function fetchSuggestions(query) {
+        return fetch('search.php?q=' + encodeURIComponent(query))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response;
+            });
+    }
+
+    function displaySuggestions(suggestions) {
+        if (suggestions.length === 0) {
+            suggestionsList.innerHTML = '<li>No suggestions found</li>';
+        } else {
+            const items = suggestions.map(item => `<li data-product="${item}">${item}</li>`).join('');
+            suggestionsList.innerHTML = items;
+        }
+        suggestionsList.style.display = 'block';
+
+        // Ajouter un écouteur d'événements sur chaque suggestion
+        suggestionsList.querySelectorAll('li').forEach(suggestion => {
+            suggestion.addEventListener('click', function() {
+                const productName = this.getAttribute('data-product');
+                window.location.href = `detail.php?nom=${encodeURIComponent(productName)}`;
+            });
+        });
+    }
+});
+
+
+</script>
 </html>
