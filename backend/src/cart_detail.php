@@ -38,10 +38,10 @@ $items = $controller->getCartDetails($_SESSION['user_id']);
         <p>Quantité: <?php echo htmlspecialchars($item['quantity']); ?></p>
         <!-- Formulaire pour supprimer un produit -->
         <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-            <input type="hidden" name="action" value="delete">
-            <input type="hidden" name="product_id" value="<?php echo $item['id_produit']; ?>">
-            <button type="submit">Retirer du panier</button>
-        </form>
+    <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['id_produit']); ?>">
+    <button type="submit">Retirer du panier</button>
+</form>
+
     </li>
 <?php endforeach; ?>
 
@@ -72,6 +72,8 @@ function removeFromCart(productId) {
         if (response.ok) {
             // Mettre à jour le nombre de produits dans la navbar après suppression
             fetchCartItemCount();
+            // Supprimer l'élément du DOM
+            document.querySelector(`[data-product-id="${productId}"]`).remove();
         } else {
             console.error('Erreur lors de la suppression du produit du panier.');
         }
@@ -97,7 +99,16 @@ function fetchCartItemCount() {
 
 // Appel initial pour afficher le nombre de produits au chargement de la page
 fetchCartItemCount();
+
+// Ajouter des écouteurs d'événements pour les boutons de suppression
+document.querySelectorAll('.remove-from-cart-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const productId = this.dataset.productId;
+        removeFromCart(productId);
+    });
+});
 </script>
+
 
 </body>
 </html>

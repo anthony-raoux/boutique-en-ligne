@@ -3,15 +3,22 @@ require_once __DIR__ . '/BaseController.php';
 
 class CartDetailController extends BaseController {
     public function removeFromCart($user_id, $product_id) {
-        // Vérifier si le produit existe dans le panier
+        // Supprimer le produit du panier dans la base de données
+        $stmt = $this->db->prepare("
+            DELETE ci 
+            FROM cart_items ci 
+            JOIN carts c ON ci.cart_id = c.id 
+            WHERE ci.product_id = ? AND c.user_id = ?
+        ");
+        $stmt->execute([$product_id, $user_id]);
+
+        // Vérifier si le produit existe dans le panier en session et le supprimer
         if (isset($_SESSION['cart'][$product_id])) {
-            // Supprimer le produit du panier
             unset($_SESSION['cart'][$product_id]);
         }
     }
 
     public function getCartDetails($user_id) {
-        // Récupérer les détails du panier de l'utilisateur depuis la base de données (exemple)
         $stmt = $this->db->prepare("
             SELECT p.id_produit, p.nom, p.prix, ci.quantity 
             FROM cart_items ci 
