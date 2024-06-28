@@ -29,5 +29,17 @@ class CartDetailController extends BaseController {
         $stmt->execute([$user_id]);
         return $stmt->fetchAll();
     }
+
+    public function getCartTotal($user_id) {
+        $stmt = $this->db->prepare("
+            SELECT SUM(p.prix * ci.quantity) AS total 
+            FROM cart_items ci 
+            JOIN produits p ON ci.product_id = p.id_produit 
+            JOIN carts c ON ci.cart_id = c.id 
+            WHERE c.user_id = ?
+        ");
+        $stmt->execute([$user_id]);
+        return $stmt->fetchColumn();
+    }
 }
 ?>

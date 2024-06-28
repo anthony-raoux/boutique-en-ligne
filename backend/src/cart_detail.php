@@ -18,6 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
 
 // Récupérer les détails du panier de l'utilisateur
 $items = $controller->getCartDetails($_SESSION['user_id']);
+
+$total = 0;
+foreach ($items as $item) {
+    $total += $item['prix'] * $item['quantity'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,9 +38,10 @@ $items = $controller->getCartDetails($_SESSION['user_id']);
     <ul>
     <?php foreach ($items as $item): ?>
     <li>
-        <h2><a href="details.php?product_id=<?= $item['id_produit'] ?>"><?php echo htmlspecialchars($item['nom']); ?></a></h2>
-        <p>Prix: <?php echo htmlspecialchars($item['prix']); ?> €</p>
-        <p>Quantité: <?php echo htmlspecialchars($item['quantity']); ?></p>
+    <h2><a href="details.php?product_id=<?= $item['id_produit'] ?>"><?php echo htmlspecialchars($item['nom'] ?? ''); ?></a></h2>
+<p>Prix: <?php echo htmlspecialchars($item['prix'] ?? ''); ?> €</p>
+<p>Quantité: <?php echo htmlspecialchars($item['quantity'] ?? ''); ?></p>
+
         <!-- Formulaire pour supprimer un produit -->
         <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
     <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($item['id_produit']); ?>">
@@ -47,6 +53,7 @@ $items = $controller->getCartDetails($_SESSION['user_id']);
 
 
     </ul>
+    <h2>Total: <?php echo htmlspecialchars($total); ?> €</h2>
     <a href="checkout.php">Checkout</a>
 
     <!-- Inclusion du fichier JavaScript -->
