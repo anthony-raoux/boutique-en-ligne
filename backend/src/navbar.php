@@ -1,21 +1,15 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start(); // Démarrer la session si elle n'est pas déjà démarrée
+    session_start();
 }
 
 require_once 'controllers/ProductController.php';
 
-// Vérifier si l'utilisateur est connecté en tant qu'utilisateur normal ou administrateur
 $loggedIn = isset($_SESSION['user_id']);
 $adminLoggedIn = isset($_SESSION['admin_id']);
-
-// Déterminer la page actuelle
 $currentPage = basename($_SERVER['SCRIPT_NAME'], '.php');
-
-// Calculer le nombre d'articles dans le panier
 $cartItemCount = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
 
-// Fonction pour vérifier si une page est active
 function isActivePage($pageName, $currentPage) {
     return $currentPage === $pageName ? 'active' : '';
 }
@@ -26,7 +20,7 @@ function isActivePage($pageName, $currentPage) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recherche de produits</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Incluez votre fichier CSS -->
+    <link rel="stylesheet" href="styles.css">
     <style>
         .suggestions {
             list-style-type: none;
@@ -65,12 +59,9 @@ function isActivePage($pageName, $currentPage) {
                 <li><a href="login.php" class="<?= isActivePage('login', $currentPage); ?>">Login</a></li>
                 <li><a href="register.php" class="<?= isActivePage('register', $currentPage); ?>">Register</a></li>
             <?php endif; ?>
-            <!-- Ajouter un message de débogage -->
             <li>Session status: <?= session_status() === PHP_SESSION_ACTIVE ? 'Active' : 'Not active'; ?></li>
             <li>User ID: <?= isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'Not set'; ?></li>
             <li>Admin ID: <?= isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : 'Not set'; ?></li>
-
-            <!-- Barre de recherche -->
             <li>
                 <div class="search-container">
                     <input type="text" id="search-input" placeholder="Rechercher des produits...">
@@ -79,8 +70,6 @@ function isActivePage($pageName, $currentPage) {
             </li>
         </ul>
     </nav>
-
-
 </body>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -120,31 +109,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (suggestions.length === 0) {
             suggestionsList.innerHTML = '<li>No suggestions found</li>';
         } else {
-            const items = suggestions.map(item => `<li data-product="${item}">${item}</li>`).join('');
+            const items = suggestions.map(item => `<li data-product-id="${item.id_produit}">${item.nom}</li>`).join('');
             suggestionsList.innerHTML = items;
         }
         suggestionsList.style.display = 'block';
 
-        // Ajouter un écouteur d'événements sur chaque suggestion
         suggestionsList.querySelectorAll('li').forEach(suggestion => {
             suggestion.addEventListener('click', function() {
-                const productName = this.getAttribute('data-product');
-                redirectToDetail(productName);
+                const productId = this.getAttribute('data-product-id');
+                redirectToDetail(productId);
             });
         });
     }
 
-    function redirectToDetail(productName) {
-        fetch('search.php?q=' + encodeURIComponent(productName))
-            .then(response => response.json())
-            .then(data => {
-                if (data.length === 1) {
-                    const productId = data[0]['id_produit'];
-                    window.location.href = `detail.php?product_id=${productId}`;
-                }
-            });
+    function redirectToDetail(productId) {
+        window.location.href = `details.php?product_id=${productId}`;
     }
 });
 </script>
-
 </html>
