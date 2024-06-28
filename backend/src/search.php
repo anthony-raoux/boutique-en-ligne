@@ -5,6 +5,8 @@ $username = "root";
 $password = "";
 $dbname = "boutique_en_ligne";
 
+
+
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     // set the PDO error mode to exception
@@ -15,10 +17,10 @@ try {
         $query = $_GET['q'];
         
         // Requête SQL pour rechercher des produits basés sur le terme de recherche
-        $stmt = $conn->prepare("SELECT nom FROM produits WHERE nom LIKE :query");
-        $stmt->bindValue(':query', '%' . $query . '%', PDO::PARAM_STR);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $conn->prepare("SELECT id_produit, nom FROM produits WHERE nom LIKE :query");
+$stmt->bindValue(':query', '%' . $query . '%', PDO::PARAM_STR);
+$stmt->execute();
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Récupération des noms de produits trouvés
         $suggestions = array_column($results, 'nom');

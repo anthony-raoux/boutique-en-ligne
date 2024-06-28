@@ -3,6 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start(); // Démarrer la session si elle n'est pas déjà démarrée
 }
 
+require_once 'controllers/ProductController.php';
+
 // Vérifier si l'utilisateur est connecté en tant qu'utilisateur normal ou administrateur
 $loggedIn = isset($_SESSION['user_id']);
 $adminLoggedIn = isset($_SESSION['admin_id']);
@@ -127,12 +129,22 @@ document.addEventListener('DOMContentLoaded', function() {
         suggestionsList.querySelectorAll('li').forEach(suggestion => {
             suggestion.addEventListener('click', function() {
                 const productName = this.getAttribute('data-product');
-                window.location.href = `detail.php?nom=${encodeURIComponent(productName)}`;
+                redirectToDetail(productName);
             });
         });
     }
+
+    function redirectToDetail(productName) {
+        fetch('search.php?q=' + encodeURIComponent(productName))
+            .then(response => response.json())
+            .then(data => {
+                if (data.length === 1) {
+                    const productId = data[0]['id_produit'];
+                    window.location.href = `detail.php?product_id=${productId}`;
+                }
+            });
+    }
 });
-
-
 </script>
+
 </html>
