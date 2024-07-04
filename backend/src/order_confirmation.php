@@ -1,0 +1,49 @@
+<?php
+session_start();
+require_once __DIR__ . '/controllers/OrderConfirmationController.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit();
+}
+
+// Récupérer les détails de la commande à partir de l'URL (via $_GET)
+$order_id = $_GET['order_id'] ?? null;
+
+if (!$order_id) {
+    echo "ID de commande manquant.";
+    exit;
+}
+
+$controller = new OrderConfirmationController();
+$orderDetails = $controller->getOrderDetails($order_id);
+
+if (!$orderDetails) {
+    echo "Commande non trouvée.";
+    exit;
+}
+
+$order = $orderDetails['order'];
+$items = $orderDetails['items'];
+
+// Débogage : Afficher le contenu de $items pour vérifier les clés
+// var_dump($items);
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Confirmation</title>
+</head>
+<body>
+<?php include 'navbar.php'; ?>
+    <h1>Order Confirmation</h1>
+    <h2>Order ID: <?php echo $order['id']; ?></h2>
+    <ul>
+        <?php foreach ($items as $item): ?>
+            <li><?php echo $item['quantity'] . ' x ' . $item['nom'] . ' - $' . $item['prix']; ?></li>
+        <?php endforeach; ?>
+    </ul>
+    <a href="simulate_payment.php?order_id=<?php echo $order['id']; ?>">Simulate Payment</a>
+</body>
+</html>
