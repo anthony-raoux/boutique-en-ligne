@@ -62,7 +62,7 @@ public function loginAdmin($email, $mot_de_passe) {
         if ($admin && password_verify($mot_de_passe, $admin['mot_de_passe'])) {
             return [
                 'success' => true,
-                'admin_id' => $admin['id_administrateur'],
+                'admin_id' => $admin['id'],
                 'prenom' => $admin['prenom'], // Ajouter le prénom de l'admin
                 'role' => 'admin'
             ];

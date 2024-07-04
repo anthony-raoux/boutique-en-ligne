@@ -1,3 +1,4 @@
+<!-- product_details.php -->
 <?php
 session_start();
 

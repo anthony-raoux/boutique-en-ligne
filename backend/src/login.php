@@ -1,12 +1,12 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) {
+if (isset($_SESSION['user_id']) || isset($_SESSION['id'])) {
     // Rediriger vers la page appropriée si déjà connecté
     if (isset($_SESSION['user_id'])) {
         header("Location: profile.php");
-    } elseif (isset($_SESSION['admin_id'])) {
-        header("Location: dashboard.php");
+    } elseif (isset($_SESSION['id'])) {
+        // header("Location: dashboard.php");
     }
     exit();
 }
@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($loginResult['success']) {
             $_SESSION['admin_id'] = $loginResult['admin_id'];
-            $_SESSION['admin_prenom'] = $loginResult['prenom']; // Stocker le prénom de l'admin dans la session
             header("Location: dashboard.php");
             exit();
         }
@@ -46,20 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($loginResult['success']) {
             $_SESSION['user_id'] = $loginResult['user_id'];
-            $_SESSION['user_prenom'] = $loginResult['prenom']; // Stocker le prénom de l'utilisateur dans la session
-            header("Location: profile.php");
+            header("Location: index.php");
             exit();
         }
 
         // Si les deux échouent, afficher un message d'erreur
         $loginError = $loginResult['error'];
-    }
-
-    $error_message = '';
-    if (isset($_GET['error'])) {
-        if ($_GET['error'] == 'not_logged_in') {
-            $error_message = 'Vous devez être connecté pour ajouter des produits au panier.';
-        }
     }
 }
 ?>
@@ -72,33 +63,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login Page</title>
     <link rel="stylesheet" href="../frontend/css/styles.css">
 </head>
-<body>
+<main class="bg-stone-800 flex items-center justify-center min-h-screen">
     <?php
     $currentPage = 'login';
-    include 'navbar.php';
+    include 'head.php';
     ?>
 
-    <div class="content">
-        <h1>Login</h1>
-
+    <div class="p-8 w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-8 text-white text-center">App</h1>
+        
         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
-                <span class="error"><?php echo $emailError; ?></span>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password">
-                <span class="error"><?php echo $passwordError; ?></span>
-            </div>
-            
-            <button type="submit">Login</button>
-            <span class="error"><?php echo $loginError; ?></span>
-        </form>
-    </div>
+            <h1 class="text-2xl font-bold mb-8 text-white text-center">Connexion</h1>
 
-    <script src="../frontend/js/login.js"></script>
-</body>
+            <div class="relative z-0 w-full mb-8 group">
+                <input type="email" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-stone-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white peer px-1" placeholder=" " value="<?php echo htmlspecialchars($email); ?>" />
+                <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-300 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+                <span class="text-red-500 text-xs mt-1"><?php echo $emailError; ?></span>
+            </div>
+
+            <div class="relative z-0 w-full mb-8 group">
+                <input type="password" name="password" id="password" class="block py-2.5 px-0 w-full text-sm text-stone-100 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white peer px-1" placeholder=" " />
+                <label for="password" class="peer-focus:font-medium absolute text-sm text-gray-300 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Mot de passe</label>
+                <span class="text-red-500 text-xs mt-1"><?php echo $passwordError; ?></span>
+            </div>
+            
+            <button type="submit" class="w-full bg-zinc-50 text-black py-2 px-4 rounded-md hover:bg-zinc-950 hover:text-white focus:outline-none">Se connecter</button>
+            <span class="text-red-500 text-xs mt-2 block"><?php echo $loginError; ?></span>
+        </form>
+        
+        <p class="text-center text-gray-400">Vous n'avez pas de compte ? <br> <a class="hover:underline underline-offset-8" href="register.php">Inscrivez-vous <span class="text-gray-200">ici</span>.</a></p>
+    </div>
+</main>
+
+<script src="../frontend/js/script.js"></script>
 </html>

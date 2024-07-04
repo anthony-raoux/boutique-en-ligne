@@ -30,21 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteProduct'])) {
         $message = "Erreur lors de la suppression du produit: " . htmlspecialchars($deleteResult['error']);
     }
 }
+
+include 'head.php';
+include 'navbar.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supprimer un produit - Dashboard</title>
-    <link rel="stylesheet" href="../frontend/css/styles.css">
-</head>
-<body>
-    <?php include 'navbar.php'; ?>
 
     <div class="content">
-        <h1>Supprimer un produit</h1>
+        <h1 class="text-white">Supprimer un produit</h1>
 
         <?php if (!empty($message)) : ?>
             <div class="message"><?php echo $message; ?></div>
@@ -53,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteProduct'])) {
         <div class="delete-product-form">
             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                 <div class="form-group">
-                    <label for="product_id">Sélectionner un produit à supprimer :</label>
+                    <label  class="text-white" for="product_id">Sélectionner un produit à supprimer :</label>
                     <select id="product_id" name="product_id" required>
                         <option value="" disabled selected>Choisir un produit</option>
                         <?php foreach ($productResult['products'] as $product) : ?>
@@ -61,9 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteProduct'])) {
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <button type="submit" name="deleteProduct">Supprimer le produit</button>
+                <button class="text-white" type="submit" name="deleteProduct">Supprimer le produit</button>
             </form>
         </div>
     </div>
-</body>
-</html>
+<?php include_once 'footer.php'; ?>

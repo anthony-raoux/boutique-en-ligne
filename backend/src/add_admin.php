@@ -1,9 +1,9 @@
 <?php
-// Informations de connexion à la base de données
-$servername = "localhost";
-$username = "root";
-$password_db = "";
-$dbname = "boutique_en_ligne";
+    // Informations de connexion à la base de données
+    $servername = "localhost";
+    $username = "root";
+    $password_db = "";
+    $dbname = "boutique_en_ligne";
 
 try {
     // Connexion à la base de données MySQL via PDO
@@ -11,10 +11,10 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Données de l'administrateur à insérer
-    $nom = "admin1";
-    $prenom = "test";
-    $email = "admin01@hotmail.com";
-    $mot_de_passe = "uwu"; // Le mot de passe en clair
+    $nom = "yes";
+    $prenom = "yes";
+    $email = "yes@yes.com";
+    $mot_de_passe = "yes"; // Le mot de passe en clair
 
     // Hashage du mot de passe
     $hashed_password = password_hash($mot_de_passe, PASSWORD_DEFAULT);
