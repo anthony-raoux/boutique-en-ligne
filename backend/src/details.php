@@ -53,12 +53,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Initialisation de la variable $inWishlist
 $inWishlist = false;
-$wishlist = $wishlistController->getWishlist($_SESSION['user_id']);
-foreach ($wishlist as $item) {
-    if ($item['id_produit'] == $product_id) {
-        $inWishlist = true;
-        break;
+
+// Vérification si l'utilisateur est connecté
+if (isset($_SESSION['user_id'])) {
+    try {
+        // Récupération de la wishlist de l'utilisateur
+        $wishlist = $wishlistController->getWishlist($_SESSION['user_id']);
+        foreach ($wishlist as $item) {
+            if ($item['id_produit'] == $product_id) {
+                $inWishlist = true;
+                break;
+            }
+        }
+    } catch (Exception $e) {
+        // Gérer les exceptions si nécessaire
+        echo "Erreur : " . $e->getMessage();
     }
 }
 ?>

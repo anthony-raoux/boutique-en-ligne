@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Register Page</title>
     <link rel="stylesheet" href="../frontend/css/styles.css">
 </head>
-<body>
+<body class="bg-gray-100">
     <?php
     session_start(); // Démarrer ou reprendre la session
 
@@ -82,48 +82,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include 'navbar.php';
     ?>
 
-    <div class="content">
-        <h1>Register</h1>
+    <div class="max-w-md mx-auto mt-10 bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
         
         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-            <div class="form-group">
-                <label for="nom">Last Name:</label>
-                <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($nom); ?>">
-                <span class="error"><?php echo $nomError; ?></span>
+            <div class="mb-4">
+                <label for="nom" class="block text-gray-700">Last Name:</label>
+                <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($nom); ?>" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <span class="text-red-500 text-sm"><?php echo $nomError; ?></span>
             </div>
 
-            <div class="form-group">
-                <label for="prenom">First Name:</label>
-                <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($prenom); ?>">
-                <span class="error"><?php echo $prenomError; ?></span>
+            <div class="mb-4">
+                <label for="prenom" class="block text-gray-700">First Name:</label>
+                <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($prenom); ?>" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <span class="text-red-500 text-sm"><?php echo $prenomError; ?></span>
             </div>
             
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
-                <span class="error"><?php echo $emailError; ?></span>
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700">Email:</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <span class="text-red-500 text-sm"><?php echo $emailError; ?></span>
             </div>
             
-            <div class="form-group">
-                <label for="mot_de_passe">Password:</label>
-                <input type="password" id="mot_de_passe" name="mot_de_passe">
-                <span class="error"><?php echo $mot_de_passeError; ?></span>
+            <div class="mb-4">
+                <label for="mot_de_passe" class="block text-gray-700">Password:</label>
+                <input type="password" id="mot_de_passe" name="mot_de_passe" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <span class="text-red-500 text-sm"><?php echo $mot_de_passeError; ?></span>
             </div>
 
-            <div class="form-group">
-                <label for="adresse">Address:</label>
-                <input type="text" id="adresse" name="adresse" value="<?php echo htmlspecialchars($adresse); ?>">
-                <span class="error"><?php echo $adresseError; ?></span>
+            <div class="mb-4">
+                <label for="adresse" class="block text-gray-700">Address:</label>
+                <input type="text" id="adresse" name="adresse" value="<?php echo htmlspecialchars($adresse); ?>" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <span class="text-red-500 text-sm"><?php echo $adresseError; ?></span>
             </div>
 
-            <div class="form-group">
-                <label for="telephone">Phone Number:</label>
-                <input type="tel" id="telephone" name="telephone" value="<?php echo htmlspecialchars($telephone); ?>">
-                <span class="error"><?php echo $telephoneError; ?></span>
+            <div class="mb-4">
+                <label for="telephone" class="block text-gray-700">Phone Number:</label>
+                <input type="tel" id="telephone" name="telephone" value="<?php echo htmlspecialchars($telephone); ?>" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <span class="text-red-500 text-sm"><?php echo $telephoneError; ?></span>
             </div>
             
-            <button type="submit">Register</button>
-            <span class="error"><?php echo $registerError; ?></span>
+            <div class="flex items-center justify-between">
+                <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Register</button>
+            </div>
+            <span class="text-red-500 text-sm mt-4 block"><?php echo $registerError; ?></span>
         </form>
     </div>
 
