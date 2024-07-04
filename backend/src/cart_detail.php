@@ -1,8 +1,3 @@
-<!-- Affiche les détails du panier de l'utilisateur 
-        +
-    supprimer des articles
--->
-
 <?php
 session_start();
 require_once './controllers/CartDetailController.php';

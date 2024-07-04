@@ -187,42 +187,42 @@
                     </div>
                 <?php else : ?>
                     <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6 ml-5">
-    <?php if ($adminLoggedIn) : ?>
-        <div class="relative ml-8">
-            <div>
-                <button id="user-menu-button" type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-expanded="false" aria-haspopup="true">
-                    <span class="absolute -inset-1.5"></span>
-                    <span class="sr-only">Open user menu</span>
-                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                </button>
-            </div>
-            <div id="user-menu" class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                <a href="./profile.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                    </svg>
-                    Profile
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 01.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 01.5 0Z" />
-                    </svg>
-                    Commande
-                </a>
-                <a href="./logout.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-                    </svg>
-                    Déconnexion
-                </a>
-            </div>
-        </div>
-    <?php else : ?>
-        <a href="./login.php" class="text-sm font-medium text-slate-100 hover:text-gray-800">Connexion</a>
-        <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
-        <a href="./register.php" class="text-sm font-medium text-slate-100 hover:text-gray-800">Inscription</a>
-    <?php endif; ?>
-</div>
+                        <?php if ($adminLoggedIn) : ?>
+                            <div class="relative ml-8">
+                                <div>
+                                    <button id="user-menu-button" type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-expanded="false" aria-haspopup="true">
+                                        <span class="absolute -inset-1.5"></span>
+                                        <span class="sr-only">Open user menu</span>
+                                        <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                    </button>
+                                </div>
+                                <div id="user-menu" class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                                    <a href="./profile.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                        </svg>
+                                        Profile
+                                    </a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 01.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 01.5 0Z" />
+                                        </svg>
+                                        Commande
+                                    </a>
+                                    <a href="./logout.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                                        </svg>
+                                        Déconnexion
+                                    </a>
+                                </div>
+                            </div>
+                        <?php else : ?>
+                            <a href="./login.php" class="text-sm font-medium text-slate-100 hover:text-gray-800">Connexion</a>
+                            <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
+                            <a href="./register.php" class="text-sm font-medium text-slate-100 hover:text-gray-800">Inscription</a>
+                        <?php endif; ?>
+                    </div>
 
                 <?php endif; ?>
             </div>
@@ -246,23 +246,27 @@
 
   <body class="bg-stone-800">
 
+
+
 <!-- Modal de barre de recherche -->
-<div  class="fixed inset-0 z-50 flex items-star justify-center hidden bg-black bg-opacity-50">
-    <div id="search-modal" class="p-0 bg-white rounded-lg shadow-lg w-full max-w-md relative m-0 mt-32  ">
+<div id="search-modal" class="fixed inset-0 z-50 mt-32 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
         <!-- Formulaire de recherche avec icône loupe -->
-        <form action="#" method="GET" class="flex items-center bg-black text-end rounded-lg border border-gray-300 flex-col">
-            <div class="relative flex w-full flex-row-reverse">
-                <input type="text" id="search-input" class="bg-black dark:text-white text-sm rounded-bottom-lg pl-10 pr-3.5 py-2.5 w-full" placeholder="Rechercher...">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
-                </div>
-            </div>
-            <div class="mt-3 p-5">
-                <p class="text-white">Aucun résultat</p>
-            </div>
-        </form>
+        <!-- Formulaire de recherche avec icône loupe -->
+<!-- Formulaire de recherche avec icône loupe -->
+<form action="#" method="GET" class="flex items-center bg-black text-end rounded-lg border border-gray-300 flex-col p-4">
+    <div class="relative flex w-full">
+        <input type="text" id="search-input" class="bg-black text-white text-sm rounded-lg pl-10 pr-3.5 py-2.5 w-full" placeholder="Rechercher...">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+        </div>
+    </div>
+    <div id="suggestions-list" class="mt-3 w-full bg-gray-800 text-white rounded-lg shadow-lg">
+        <p class="text-gray-300 p-2 text-center">Aucune résultat</p>
+    </div>
+</form>
          <!-- Bouton pour fermer le modal -->
          <button id="close-search-modal" class="absolute top-0 right-0 m-3 text-gray-600 hover:text-gray-800 focus:outline-none">
             <svg class="h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -329,3 +333,72 @@
     });
 </script>
 
+
+<!-- Bar de recherche -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const suggestionsList = document.getElementById('suggestions-list');
+
+    // Afficher le message par défaut avant que l'utilisateur commence à taper
+    const defaultMsg = '<p class="text-gray-500 p-2 text-center"> Cherchez la consoles / accessoires de votre reve...</p>';
+    suggestionsList.innerHTML = defaultMsg;
+
+    searchInput.addEventListener('input', function() {
+        const inputValue = this.value.trim();
+
+        if (inputValue.length === 0) {
+            suggestionsList.innerHTML = defaultMsg;
+            return;
+        }
+
+        fetchSuggestions(inputValue)
+            .then(response => response.json())
+            .then(data => {
+                displaySuggestions(data);
+            })
+            .catch(error => {
+                console.error('Désolé, aucune suggestion trouvée:', error);
+            });
+    });
+
+    function fetchSuggestions(query) {
+        return fetch('search.php?q=' + encodeURIComponent(query))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response;
+            });
+    }
+
+    function displaySuggestions(suggestions) {
+        if (suggestions.length === 0) {
+            suggestionsList.innerHTML = '<p class="text-gray-500 p-2 text-center">Aucune suggestion trouvée</p>';
+        } else {
+            const items = suggestions.map(item => `
+                <button type="button" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white" data-product-id="${item.id_produit}">
+                    <div class="flex justify-between items-center">
+                        <span>${item.nom}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                        </svg>
+                    </div>
+                </button>
+            `).join('');
+            suggestionsList.innerHTML = items;
+        }
+
+        suggestionsList.querySelectorAll('button').forEach(suggestion => {
+            suggestion.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                redirectToDetail(productId);
+            });
+        });
+    }
+
+    function redirectToDetail(productId) {
+        window.location.href = `details.php?product_id=${productId}`;
+    }
+});
+</script>

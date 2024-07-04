@@ -53,22 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $loginError = $loginResult['error'];
     }
 }
+
+$currentPage = 'login';
+include 'head.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="../frontend/css/styles.css">
-</head>
 <main class="bg-stone-800 flex items-center justify-center min-h-screen">
-    <?php
-    $currentPage = 'login';
-    include 'head.php';
-    ?>
-
     <div class="p-8 w-full max-w-md">
         <h1 class="text-2xl font-bold mb-8 text-white text-center">App</h1>
         
