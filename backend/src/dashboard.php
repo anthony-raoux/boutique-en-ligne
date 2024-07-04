@@ -125,7 +125,145 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Gestion des produits</title>
-    <link rel="stylesheet" href="../frontend/css/styles.css">
+    <style>
+    /* Styles généraux */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #000;
+        color: gray;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    h1, h2, h3 {
+        color: #fff;
+    }
+
+    .message {
+        background-color: #007bff; /* Couleur de fond pour le message */
+        color: #fff; /* Texte blanc pour le message */
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Styles spécifiques pour le formulaire d'ajout de produit avec fond blanc */
+
+    .add-product-form.white-background {
+        background-color: #fff; /* Fond blanc */
+        color: #000; /* Texte noir */
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc; /* Bordure grise */
+        border-radius: 4px;
+    }
+
+    .add-product-form.white-background .form-group label {
+        color: #000; /* Couleur du texte noir pour les labels */
+    }
+
+    .add-category-form {
+        background-color: #333; /* Fond gris foncé pour les formulaires d'ajout */
+        color: gray; /* Texte blanc pour les formulaires d'ajout */
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #555; /* Bordure plus foncée */
+        border-radius: 4px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #fff; /* Couleur du texte blanc pour les labels */
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group select,
+    .form-group button,
+    .form-group input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 5px;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        height: 100px; /* Ajuster la hauteur de la zone de texte */
+    }
+
+    .form-group button {
+        background-color: #007bff; /* Couleur de fond pour les boutons */
+        color: #fff; /* Texte blanc pour les boutons */
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .form-group button:hover {
+        background-color: #0056b3; /* Couleur de fond des boutons au survol */
+    }
+
+    .category-list ul,
+    .product-list table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    .category-list ul li,
+    .product-list table th,
+    .product-list table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+    }
+
+    .product-list table th {
+        background-color: #007bff; /* Couleur de fond pour les entêtes de tableau */
+        color: #fff; /* Texte blanc pour les entêtes de tableau */
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .product-list table td img {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .product-list table td:last-child form {
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .product-list table td:last-child form button {
+        background-color: #dc3545; /* Couleur de fond pour les boutons de suppression */
+        color: #fff; /* Texte blanc pour les boutons de suppression */
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .product-list table td:last-child form button:hover {
+        background-color: #c82333; /* Couleur de fond des boutons de suppression au survol */
+    }
+</style>
+
 </head>
 <body>
     <?php include 'navbar.php'; ?>

@@ -48,6 +48,97 @@ $orders = $historiqueController->getOrderHistory($user_id);
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
+    <style>
+        /* Styles généraux */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff; /* Fond blanc */
+            color: #333; /* Texte noir par défaut */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            color: #333; /* Titres en noir */
+        }
+
+        p {
+            color: #333; /* Texte des paragraphes en noir */
+        }
+
+        /* Formulaire de mise à jour du profil */
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff; /* Fond blanc */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333; /* Couleur du texte des étiquettes */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc; /* Bordure grise */
+            border-radius: 4px;
+            box-sizing: border-box; /* Respecter la largeur réelle */
+        }
+
+        button[type="submit"] {
+            background-color: #007bff; /* Bleu de base */
+            color: #fff; /* Texte blanc */
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3; /* Bleu foncé au survol */
+        }
+
+        /* Styles pour l'affichage de l'historique des achats */
+        .historique {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff; /* Fond blanc */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 20px;
+        }
+
+        ul li ul {
+            margin-top: 10px;
+        }
+
+        a {
+            color: #007bff; /* Couleur des liens */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <?php require_once 'navbar.php'; ?>
@@ -85,28 +176,29 @@ $orders = $historiqueController->getOrderHistory($user_id);
     </form>
 
     <!-- Affichage de l'historique des achats -->
-    <h2>Historique des Achats</h2>
-    <ul>
-    <?php foreach ($orders as $order): ?>
-    <li>Order #<?php echo $order['id']; ?> - Status: <?php echo $order['payment_status']; ?>
-        <?php if (isset($order['items']) && !empty($order['items'])): ?>
-            <ul>
-                <?php foreach ($order['items'] as $item): ?>
-                    <li>
-                        <?php echo $item['quantity'] . ' x ' . $item['name'] . ' - $' . $item['price']; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <ul>
-                <li>No items found.</li>
-            </ul>
-        <?php endif; ?>
-    </li>
-<?php endforeach; ?>
-                
-    </ul>
+    <div class="historique">
+        <h2>Historique des Achats</h2>
+        <ul>
+        <?php foreach ($orders as $order): ?>
+            <li>Order #<?php echo $order['id']; ?> - Status: <?php echo $order['payment_status']; ?>
+                <?php if (isset($order['items']) && !empty($order['items'])): ?>
+                    <ul>
+                        <?php foreach ($order['items'] as $item): ?>
+                            <li>
+                                <?php echo $item['quantity'] . ' x ' . $item['name'] . ' - $' . $item['price']; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <ul>
+                        <li>No items found.</li>
+                    </ul>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+        </ul>
 
-    <a href="historique_achats.php">Voir l'historique complet des achats</a>
+        <a href="historique_achats.php">Voir l'historique complet des achats</a>
+    </div>
 </body>
 </html>

@@ -43,10 +43,62 @@ $wishlist = $wishlistController->getWishlist($_SESSION['user_id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Votre wishlist</title>
-    <link rel="stylesheet" href="path/to/your/css/styles.css">
+    <style>
+        /* Styles généraux */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff; /* Fond blanc */
+            color: #333; /* Texte noir par défaut */
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #333; /* Fond noir de la navbar */
+            color: #FFF; /* Texte blanc dans la navbar */
+            padding: 10px 20px; /* Espacement interne */
+        }
+
+        h1 {
+            color: #333; /* Titre en blanc */
+        }
+
+        p, h2 {
+            color: #333; /* Texte en blanc */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9; /* Fond gris clair pour les éléments de la liste */
+        }
+
+        button {
+            background-color: #007bff; /* Couleur de fond des boutons */
+            color: #fff; /* Texte blanc des boutons */
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: yellow; /* Couleur de fond des boutons au survol */
+        }
+    </style>
 </head>
 <body>
-    <?php include 'navbar.php'; ?>
+    <div class="navbar">
+        <?php include 'navbar.php'; ?>
+    </div>
 
     <div class="content">
         <h1>Votre wishlist</h1>
@@ -74,7 +126,7 @@ $wishlist = $wishlistController->getWishlist($_SESSION['user_id']);
     </div>
 
     <script>
-        
+        // Vous pouvez ajouter du JavaScript ici si nécessaire
     </script>
 </body>
 </html>

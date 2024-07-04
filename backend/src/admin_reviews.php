@@ -30,7 +30,91 @@ $reviews = $adminController->getAllReviews();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modération des avis</title>
-    <link rel="stylesheet" href="../frontend/css/styles.css">
+    <style>
+        /* styles.css */
+
+/* Reset des marges et paddings par défaut */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Style général du corps de la page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    padding: 20px;
+}
+
+/* Style du conteneur principal */
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style du titre principal */
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Style du tableau des avis */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th,
+table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Style des boutons dans le tableau */
+table button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+table button:hover {
+    background-color: #0056b3;
+}
+
+/* Style des actions dans la dernière colonne du tableau */
+table td form {
+    display: inline;
+    margin-right: 10px;
+}
+
+/* Responsive pour les petits écrans */
+@media (max-width: 768px) {
+    table th,
+    table td {
+        padding: 8px;
+    }
+
+    table button {
+        padding: 6px 10px;
+    }
+}
+
+    </style>
 </head>
 <body>
     <?php include 'navbar.php'; ?>

@@ -27,6 +27,46 @@ $orders = $controller->getOrderHistory($user_id);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historique des Achats</title>
+    <style>
+        /* Styles généraux */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff; /* Fond blanc */
+            color: #3fff;/* Texte noir par défaut */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #fff; /* Titre en noir */
+        }
+
+        p {
+            color: #333; /* Texte des paragraphes en noir */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 20px;
+        }
+
+        ul li ul {
+            margin-top: 10px;
+        }
+
+        a {
+            color: #007bff; /* Couleur des liens */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <?php require_once 'navbar.php'; ?>

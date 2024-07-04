@@ -34,6 +34,40 @@ $items = $orderDetails['items'];
 <html>
 <head>
     <title>Order Confirmation</title>
+    <style>
+        /* styles.css */
+
+body {
+    background-color: #fff; /* White background */
+    color: #fff; /* White text */
+    font-family: Arial, sans-serif; /* Example font family */
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3 {
+    color: #fff; /* White text */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+a {
+    color: #fff; /* White link color */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+    </style>
 </head>
 <body>
 <?php include 'navbar.php'; ?>

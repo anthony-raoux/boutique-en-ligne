@@ -85,7 +85,7 @@ include_once 'navbar.php';
     <!-- Brand Section -->
     <div class="py-24 sm:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <h2 class="text-center text-lg font-semibold leading-8 text-black">Retrouvez tout vos marque préférées</h2>
+            <h2 class="text-center text-lg font-semibold leading-8 text-white">Retrouvez tout vos marque préférées</h2>
             <div class="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-4">
                 <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="../../images/nintendo_logo.png" alt="Transistor" width="500" height="auto">
                 <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="../../images/playstation_logo.png" alt="Reform" width="250" height="auto">
@@ -97,7 +97,7 @@ include_once 'navbar.php';
 
  <!-- Products Section -->
 <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-    <h2 class="text-2xl font-bold tracking-tight text-black">Nos meilleures ventes</h2>
+    <h2 class="text-2xl font-bold tracking-tight text-white">Nos meilleures ventes</h2>
     <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
         <?php foreach ($random_products as $product): ?>
             <div class="group relative">
@@ -111,7 +111,7 @@ include_once 'navbar.php';
                 </div>
                 <div class="mt-4 flex justify-between items-center">
                     <div>
-                        <h3 class="text-sm text-black">
+                        <h3 class="text-sm text-white">
                             <a href="details.php?product_id=<?= $product['id_produit'] ?>">
                                 <span aria-hidden="true" class="absolute inset-0"></span>
                                 <?= htmlspecialchars($product['nom']) ?>
@@ -130,7 +130,7 @@ include_once 'navbar.php';
 
 <!-- Another Products Section -->
 <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-    <h2 class="text-2xl font-bold tracking-tight text-black">Autres produits</h2>
+    <h2 class="text-2xl font-bold tracking-tight text-white">Autres produits</h2>
     <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
         <?php foreach ($random_products2 as $product): ?>
             <div class="group relative">
@@ -144,7 +144,7 @@ include_once 'navbar.php';
                 </div>
                 <div class="mt-4 flex justify-between items-center">
                     <div>
-                        <h3 class="text-sm text-black">
+                        <h3 class="text-sm text-white">
                             <a href="details.php?product_id=<?= $product['id_produit'] ?>">
                                 <span aria-hidden="true" class="absolute inset-0"></span>
                                 <?= htmlspecialchars($product['nom']) ?>

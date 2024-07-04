@@ -71,15 +71,16 @@ $message = '';
     <main>
         <h1>Shop</h1>
         <form id="categoryFilterForm" method="GET">
-            <label for="category">Filtrer par catégorie :</label>
-            <select id="category" name="category">
-                <option value="">Toutes les catégories</option>
-                <?php foreach ($categories as $category): ?>
-                    <option value="<?php echo htmlspecialchars($category['id_categorie']); ?>" <?php echo $categoryFilter == $category['id_categorie'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($category['nom']); ?></option>
-                <?php endforeach; ?>
-            </select>
-            <button type="submit">Filtrer</button>
-        </form>
+    <label for="category" style="color: white;">Filtrer par catégorie :</label>
+    <select id="category" name="category">
+        <option value="">Toutes les catégories</option>
+        <?php foreach ($categories as $category): ?>
+            <option value="<?php echo htmlspecialchars($category['id_categorie']); ?>" <?php echo $categoryFilter == $category['id_categorie'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($category['nom']); ?></option>
+        <?php endforeach; ?>
+    </select>
+    <button type="submit" style="color: white;">Filtrer</button>
+</form>
+
         <?php if (!empty($message)): ?>
             <p><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
