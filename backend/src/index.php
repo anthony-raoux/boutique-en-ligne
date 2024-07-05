@@ -31,7 +31,35 @@ include_once 'navbar.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-    <link rel="stylesheet" href="../frontend/css/styles.css">
+   <style>
+    .logo-wrapper {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.logo-container {
+    display: flex;
+    width: calc(250px * 8); /* Adjust according to the number of logos */
+    animation: scroll 20s linear infinite;
+}
+
+.logo {
+    flex: 0 0 150px; /* Adjust the width of each logo */
+    max-height: 12vh;
+    object-contain: contain;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+   </style>
 </head>
 <body class="bg-gray-900 text-white">
     <?php include_once 'navbar.php'; ?>
@@ -80,18 +108,26 @@ include_once 'navbar.php';
         </button>
     </div>
 
-    <!-- Brand Section -->
-    <div class="py-24 sm:py-32">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <h2 class="text-center text-lg font-semibold leading-8 text-gray-300">Retrouvez toutes vos marques préférées</h2>
-            <div class="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-4">
-                <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="../../images/nintendo_logo.png" alt="Nintendo Logo">
-                <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="../../images/playstation_logo.png" alt="Playstation Logo">
-                <img class="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="../../images/xbox_logo.png" alt="Xbox Logo">
-                <img class="col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1" src="../../images/sega_logo.png" alt="Sega Logo">
+  <!-- Brand Section -->
+<div class="py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <h2 class="text-center text-lg font-semibold leading-8 text-gray-300">Retrouvez toutes vos marques préférées</h2>
+        <div class="logo-wrapper">
+            <div class="logo-container">
+                <img class="logo" src="../../images/nintendo_logo.png" alt="Nintendo Logo">
+                <img class="logo" src="../../images/playstation_logo.png" alt="Playstation Logo">
+                <img class="logo" src="../../images/xbox_logo.png" alt="Xbox Logo">
+                <img class="logo" src="../../images/sega_logo.png" alt="Sega Logo">
+                <!-- Repeat the logos to create a seamless scrolling effect -->
+                <img class="logo" src="../../images/nintendo_logo.png" alt="Nintendo Logo">
+                <img class="logo" src="../../images/playstation_logo.png" alt="Playstation Logo">
+                <img class="logo" src="../../images/xbox_logo.png" alt="Xbox Logo">
+                <img class="logo" src="../../images/sega_logo.png" alt="Sega Logo">
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- Products Section -->
     <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
