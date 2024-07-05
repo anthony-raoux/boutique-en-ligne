@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ?>
 
     <div class="max-w-md mx-auto mt-10 bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
+        <h1 class="text-2xl font-bold mb-6 text-center">Inscription</h1>
         
         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
             <div class="mb-4">

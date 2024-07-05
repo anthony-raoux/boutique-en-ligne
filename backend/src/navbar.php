@@ -95,41 +95,40 @@
     </div>
 
 
-<?php if ($adminLoggedIn): ?>
-<header class=" bg-black sticky top-12 z-10 border-b border-gray-200">
+    <?php if ($adminLoggedIn): ?>
+<header class="bg-black sticky top-12 z-10 border-b border-gray-200">
 <?php else: ?>
-<header class=" bg-black sticky top-0 z-10 border-b border-gray-200">
+<header class="bg-black sticky top-0 z-10 border-b border-gray-200">
 <?php endif; ?>
     <nav aria-label="Top" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div>
-        <div class="flex h-16 items-center justify-between">
-            <div class="flex items-center flex-end">
-                <button id="burger-menu-button" type="button" class="relative rounded-md bg-white p-2 lg:hidden">
-                    <span class="absolute -inset-0.5"></span>
-                    <span class="sr-only">Open menu</span>
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-                </button>
+        <div>
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center flex-end">
+                    <button id="burger-menu-button" type="button" class="relative rounded-md bg-white p-2 lg:hidden">
+                        <span class="absolute -inset-0.5"></span>
+                        <span class="sr-only">Open menu</span>
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
 
-                <div class="ml-4 flex lg:ml-0">
-                    <a href="./index.php">
-                        <span class="sr-only">Your Company</span>
-                        <img class="h-8 w-auto" src="../../images/retro-pac-man.png" alt="">
-                    </a>
-                </div>
+                    <div class="ml-4 flex lg:ml-0">
+                        <a href="./index.php">
+                            <span class="sr-only">Your Company</span>
+                            <img class="h-8 w-auto" src="../../images/retro-pac-man.png" alt="">
+                        </a>
+                    </div>
 
-                
-
-
-                <div class="hidden lg:ml-8 lg:block lg:self-stretch">
-                    <div class="flex h-full space-x-8">
-                        <a href="./index.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">Accueil</a>
-                        <a href="./shop.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">Tout les produits</a>
-                        <a href="./admin_reviews.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">Modérer les commentaires</a>
+                    <div class="hidden lg:ml-8 lg:block lg:self-stretch">
+                        <div class="flex h-full space-x-8">
+                            <a href="./index.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">Accueil</a>
+                            <a href="./shop.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">Tout les produits</a>
+                            <?php if ($adminLoggedIn): ?>
+                            <a href="./admin_reviews.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">Modérer les commentaires</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-            </div>
             
             <div class="flex items-center flex-end">
                 <div class="flex lg:ml-6">
@@ -256,8 +255,7 @@
 <!-- Modal de barre de recherche -->
 <div id="search-modal" class="fixed inset-0 z-50 mt-32 flex items-center justify-center hidden bg-black bg-opacity-50">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
-        <!-- Formulaire de recherche avec icône loupe -->
-        <!-- Formulaire de recherche avec icône loupe -->
+
 <!-- Formulaire de recherche avec icône loupe -->
 <form action="#" method="GET" class="flex items-center bg-black text-end rounded-lg border border-gray-300 flex-col p-4">
     <div class="relative flex w-full">

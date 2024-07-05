@@ -145,7 +145,7 @@ button:hover {
     ?>
 
     <div class="content">
-        <h1>Login</h1>
+        <h1>Connexion</h1>
 
         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
             <div class="form-group">
@@ -160,7 +160,7 @@ button:hover {
                 <span class="error"><?php echo $passwordError; ?></span>
             </div>
             
-            <button type="submit">Login</button>
+            <button type="submit">Se connecter</button>
             <span class="error"><?php echo $loginError; ?></span>
         </form>
     </div>

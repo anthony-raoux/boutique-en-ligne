@@ -46,10 +46,10 @@ include_once 'navbar.php';
                 <img src="../../images/retro_banner_2.png" class="absolute block w-full h-full object-cover" alt="Retro Banner 2">
             </div>
             <div class="duration-700 ease-in-out" data-carousel-item>
-                <img src="../../images/retro_banner_3.png" class="absolute block w-full h-full object-cover" alt="Retro Banner 3">
+                <img src="../../images/retro_banner_3.jpg" class="absolute block w-full h-full object-cover" alt="Retro Banner 3">
             </div>
             <div class="duration-700 ease-in-out" data-carousel-item>
-                <img src="../../images/retro_banner_4.jpg" class="absolute block w-full h-full object-cover" alt="Retro Banner 4">
+                <img src="../../images/retro_banner_4.avif" class="absolute block w-full h-full object-cover" alt="Retro Banner 4">
             </div>
             <div class="duration-700 ease-in-out" data-carousel-item>
                 <img src="../../images/retro_banner_5.jpg" class="absolute block w-full h-full object-cover" alt="Retro Banner 5">
