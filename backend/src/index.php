@@ -117,7 +117,7 @@ include_once 'navbar.php';
                         <p class="text-lg font-bold text-red-600 whitespace-nowrap"><?= htmlspecialchars($product['prix']) ?> €</p>
                     </div>
                     <div class="mt-2 text-center">
-                        <a href="details.php?product_id=<?= $product['id_produit'] ?>" class="inline-block py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-500">Acheter</a>
+                        <a href="details.php?product_id=<?= $product['id_produit'] ?>" class="inline-block py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md hover:bg-blue-500">Acheter</a>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -148,7 +148,7 @@ include_once 'navbar.php';
                         <p class="text-lg font-bold text-red-600 whitespace-nowrap"><?= htmlspecialchars($product['prix']) ?> €</p>
                     </div>
                     <div class="mt-2 text-center">
-                        <a href="details.php?product_id=<?= $product['id_produit'] ?>" class="inline-block py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-500">Acheter</a>
+                        <a href="details.php?product_id=<?= $product['id_produit'] ?>" class="inline-block py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md hover:bg-blue-500">Acheter</a>
                     </div>
                 </div>
             <?php endforeach; ?>
