@@ -31,70 +31,40 @@ $message = '';
     <title>Shop</title>
     <link rel="stylesheet" href="path/to/your/css/styles.css">
     <style>
-        .products { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 20px; 
-            justify-content: center; 
-            margin-top: 20px; 
-        }
-        .product { 
-            border: 1px solid #ccc; 
-            border-radius: 8px; 
-            padding: 15px; 
-            width: 300px; 
-            background-color: #fff; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-        .product img { 
-            width: 100%; 
-            height: auto; 
-            border-radius: 8px; 
-            margin-bottom: 10px; 
-        }
-        .product h2 { 
-            font-size: 1.5rem; 
-            margin-bottom: 10px; 
-            text-align: center; 
-        }
-        .filter { 
-            margin-bottom: 20px; 
-        }
+    
     </style>
 </head>
-<body>
+</head>
+<body class="bg-gray-100">
     <?php require_once 'navbar.php'; ?>
     <header></header>
     <main>
-        <h1>Shop</h1>
-        <form id="categoryFilterForm" method="GET">
-    <label for="category" style="color: white;">Filtrer par catégorie :</label>
-    <select id="category" name="category">
-        <option value="">Toutes les catégories</option>
-        <?php foreach ($categories as $category): ?>
-            <option value="<?php echo htmlspecialchars($category['id_categorie']); ?>" <?php echo $categoryFilter == $category['id_categorie'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($category['nom']); ?></option>
-        <?php endforeach; ?>
-    </select>
-    <button type="submit" style="color: white;">Filtrer</button>
-</form>
+        <h1 class="text-3xl font-bold mt-8 mb-4 text-center">Shop</h1>
+        <form id="categoryFilterForm" method="GET" class="flex justify-center items-center mb-8">
+            <label for="category" class="mr-2">Filtrer par catégorie :</label>
+            <select id="category" name="category" class="border rounded py-2 px-4">
+                <option value="">Toutes les catégories</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?php echo htmlspecialchars($category['id_categorie']); ?>" <?php echo $categoryFilter == $category['id_categorie'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($category['nom']); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 text-white rounded py-2 px-4 ml-2">Filtrer</button>
+        </form>
 
         <?php if (!empty($message)): ?>
-            <p><?php echo htmlspecialchars($message); ?></p>
+            <p class="text-center text-red-500"><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
-        <div class="products">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <?php if (empty($products)): ?>
-                <p>Aucun produit disponible pour le moment.</p>
+                <p class="text-center text-xl">Aucun produit disponible pour le moment.</p>
             <?php else: ?>
                 <?php foreach ($products as $product): ?>
-                    <div class="product" data-id="<?php echo htmlspecialchars($product['id_produit']); ?>">
-                        <h2><?php echo htmlspecialchars($product['nom']); ?></h2>
+                    <div class="product bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center hover:bg-gray-100 transition duration-300" data-id="<?php echo htmlspecialchars($product['id_produit']); ?>">
+                        <h2 class="text-xl font-bold mb-2 text-center"><?php echo htmlspecialchars($product['nom']); ?></h2>
                         <?php if (!empty($product['image'])): ?>
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" />
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" class="w-full h-auto rounded-lg mb-4">
                         <?php else: ?>
-                            <img src="placeholder.jpg" alt="Image indisponible" />
+                            <img src="placeholder.jpg" alt="Image indisponible" class="w-full h-auto rounded-lg mb-4">
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
