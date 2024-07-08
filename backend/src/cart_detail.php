@@ -24,9 +24,15 @@ require_once 'head.php';
 require_once 'navbar.php';
 ?>
 
-
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6 text-white">Votre Panier</h1>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-white">Votre Panier</h1>
+    
+    <?php if (empty($items)): ?>
+        <div class="flex flex-col items-center justify-center">
+            <img src="../../images/panier-vide.png" alt="Panier vide" class="mb-4">
+            <p class="text-white">Votre panier est vide.</p>
+        </div>
+    <?php else: ?>
         <ul class="bg-black border border-white rounded-lg p-6">
             <?php foreach ($items as $item): ?>
                 <li class="flex justify-between items-center mb-4">
@@ -50,5 +56,5 @@ require_once 'navbar.php';
                 Passer à la caisse
             </a>
         </div>
-    </div>
-
+    <?php endif; ?>
+</div>
