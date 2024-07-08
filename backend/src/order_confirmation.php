@@ -29,55 +29,32 @@ $items = $orderDetails['items'];
 // Débogage : Afficher le contenu de $items pour vérifier les clés
 // var_dump($items);
 
+require_once 'head.php';
+require_once 'navbar.php';
+
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Order Confirmation</title>
-    <style>
-        /* styles.css */
 
-body {
-    background-color: #fff; /* White background */
-    color: #fff; /* White text */
-    font-family: Arial, sans-serif; /* Example font family */
-    margin: 0;
-    padding: 0;
-}
 
-h1, h2, h3 {
-    color: #fff; /* White text */
-}
 
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    margin-bottom: 10px;
-}
-
-a {
-    color: #fff; /* White link color */
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-    </style>
-</head>
-<body>
-<?php include 'navbar.php'; ?>
-    <h1>Order Confirmation</h1>
-    <h2>Order ID: <?php echo $order['id']; ?></h2>
-    <ul>
-        <?php foreach ($items as $item): ?>
-            <li><?php echo $item['quantity'] . ' x ' . $item['nom'] . ' - $' . $item['prix']; ?></li>
-        <?php endforeach; ?>
-    </ul>
-    <a href="simulate_payment.php?order_id=<?php echo $order['id']; ?>">Simulate Payment</a>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6 text-white">Confirmation de Commande</h1>
+        <h2 class="text-xl font-semibold mb-6 text-white">Commande ID: <?php echo $order['id']; ?></h2>
+        <ul class="bg-black border border-white rounded-lg p-6">
+            <?php foreach ($items as $item): ?>
+                <li class="flex justify-between items-center mb-4">
+                    <div>
+                        <span class="font-medium text-white"><?php echo $item['quantity']; ?> x</span>
+                        <span class="font-bold text-white"><?php echo $item['nom']; ?></span>
+                        <span class="text-gray-300">- $<?php echo $item['prix']; ?></span>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <div class="text-right mt-6">
+            <a href="simulate_payment.php?order_id=<?php echo $order['id']; ?>" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Simuler le Paiement
+            </a>
+        </div>
+    </div>
 </body>
-</html>
