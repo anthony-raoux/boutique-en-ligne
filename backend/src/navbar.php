@@ -384,25 +384,27 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             const items = suggestions.map(item => `
                 <div data-product-id="${item.id_produit}" class="mb-2">
-                    <button type="button" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-500 rounded-lg">
+                    <a href="#" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-500 rounded-lg">
                         <div class="flex justify-between items-center">
                             <span>${item.nom}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
                             </svg>
                         </div>
-                    </button>
+                    </a>
                 </div>
             `).join('');
             suggestionsList.innerHTML = items;
-        }
 
-        suggestionsList.querySelectorAll('button').forEach(suggestion => {
-            suggestion.addEventListener('click', function() {
-                const productId = this.getAttribute('data-product-id');
-                redirectToDetail(productId);
+            // Ajouter des écouteurs d'événements aux nouveaux liens
+            suggestionsList.querySelectorAll('a').forEach(suggestion => {
+                suggestion.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const productId = this.parentElement.getAttribute('data-product-id');
+                    redirectToDetail(productId);
+                });
             });
-        });
+        }
     }
 
     function redirectToDetail(productId) {
@@ -410,3 +412,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
