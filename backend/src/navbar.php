@@ -14,9 +14,9 @@
     $cartItemCount = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
 
     // Fonction pour vérifier si une page est active
-    function isActivePage($pageName, $currentPage) {
-        return $currentPage === $pageName ? 'active' : '';
-    }
+
+    // Définition de la page active (par exemple, obtenue à partir de l'URL ou d'une autre méthode)
+    $current_page = basename($_SERVER['PHP_SELF']);
 
     include_once 'head.php';
 ?>
@@ -94,60 +94,106 @@
     </div>
 
 
-<?php if ($adminLoggedIn): ?>
-<header class=" bg-black sticky top-12 z-10 border-b border-gray-200">
-<?php else: ?>
-<header class=" bg-black sticky top-0 z-10 border-b border-gray-200">
-<?php endif; ?>
-    <nav aria-label="Top" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div>
-        <div class="flex h-16 items-center justify-between">
-            <div class="flex items-center flex-end">
-                <button id="burger-menu-button" type="button" class="relative rounded-md bg-white p-2 lg:hidden">
-                    <span class="absolute -inset-0.5"></span>
-                    <span class="sr-only">Open menu</span>
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-                </button>
-
-                <div class="ml-4 flex lg:ml-0">
-                    <a href="./index.php">
-                        <span class="sr-only">Your Company</span>
-                        <img class="h-8 w-auto" src="../../images/retro-pac-man.png" alt="">
-                    </a>
-                </div>
-
-                <div class="hidden lg:ml-8 lg:block lg:self-stretch">
-                    <div class="flex h-full space-x-8">
-                        <a href="./index.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">Accueil</a>
-                        <a href="./shop.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">Tout les produits</a>
+    <?php if ($adminLoggedIn): ?>
+    <header class=" bg-black sticky top-12 z-10 border-b border-gray-200">
+    <?php else: ?>
+    <header class=" bg-black sticky top-0 z-10 border-b border-gray-200">
+    <?php endif; ?>
+        <nav aria-label="Top" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div>
+                <div class="flex h-16 items-center justify-between">
+                    <div class="flex items-center flex-end">
+                        <button id="burger-menu-button" type="button" class="relative rounded-md bg-white p-2 lg:hidden">
+                            <span class="absolute -inset-0.5"></span>
+                            <span class="sr-only">Open menu</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                        </button>
+                        <div class="ml-4 flex lg:ml-0">
+                            <a href="./index.php">
+                                <span class="sr-only">
+                                    Your Company
+                                </span>
+                                <img class="h-8 w-auto" src="../../images/retro-pac-man.png" alt="">
+                            </a>
+                        </div>
+                        <div class="hidden lg:ml-8 lg:block lg:self-stretch">
+                            <div class="flex h-full space-x-8">
+                                <a href="./index.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">
+                                    Accueil
+                                </a>
+                                <a href="./shop.php" class="flex items-center text-sm font-medium text-slate-100 hover:text-gray-800">
+                                    Tout les produits
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="flex items-center flex-end">
-                <div class="flex lg:ml-6">
-                    <a id="open-search-modal" href="#" class="p-2 text-slate-100 hover:text-gray-500">
-                        <span class="sr-only">Search</span>
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                        </svg>
-                    </a>
-                </div>
-                <div class="ml-4 flow-root lg:ml-6">
-                    <a href="./cart_detail.php" class="group -m-2 flex items-center p-2">
-                        <svg class="h-6 w-6 flex-shrink-0 text-slate-100 group-hover:text-gray-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                        </svg>
-                        (<?= $cartItemCount; ?>)
-                        <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"></span>
-                        <span class="sr-only">items in cart, view bag</span>
-                    </a>
-                </div>
-
-                <?php if ($loggedIn) : ?>
-                    <div class="ml-auto flex items-center">
+                    <div class="flex items-center flex-end">
+                        <div class="flex lg:ml-6">
+                            <a id="open-search-modal" href="#" class="p-2 text-slate-100 hover:text-gray-500">
+                                <span class="sr-only">Search</span>
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="ml-4 flow-root lg:ml-6">
+                            <a href="./cart_detail.php" class="group -m-2 flex items-center p-2">
+                                <svg class="h-6 w-6 flex-shrink-0 text-slate-100 group-hover:text-gray-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                </svg>
+                                (<?= $cartItemCount; ?>)
+                                <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"></span>
+                                <span class="sr-only">
+                                    items in cart, view bag
+                                </span>
+                            </a>
+                        </div>
+                        <?php if ($loggedIn) : ?>
+                        <div class="ml-auto flex items-center">
+                            <div class="relative ml-8">
+                                <div>
+                                    <button id="user-menu-button" type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-expanded="false" aria-haspopup="true">
+                                        <span class="absolute -inset-1.5"></span>
+                                        <span class="sr-only">
+                                            Open user menu
+                                        </span>
+                                        <img class="h-8 w-8 rounded-full" src="../../images/pp-1.png" alt="">
+                                    </button>
+                                </div>
+                                <!-- Utilisateeur Desktop -->
+                                <div id="user-menu" class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                                    <a href="./profile.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2 <?php echo ($current_page === 'profile.php') ? 'bg-zinc-800 text-white' : 'border-transparent'; ?>" role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                        </svg>
+                                        Profile
+                                    </a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                                    </svg>
+                                        Favoris
+                                    </a>
+                                    <a href="./historique_achats." class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9.75h4.875a2.625 2.625 0 0 1 0 5.25H12M8.25 9.75 10.5 7.5M8.25 9.75 10.5 12m9-7.243V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185Z" />
+                                        </svg>
+                                        Historique d'achat
+                                    </a>
+                                    <a href="./logout.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                                        </svg>
+                                        Déconnexion
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php else : ?>
+                        <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6 ml-5">
+                        <?php if ($adminLoggedIn) : ?>
                         <div class="relative ml-8">
                             <div>
                                 <button id="user-menu-button" type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-expanded="false" aria-haspopup="true">
@@ -157,24 +203,17 @@
                                 </button>
                             </div>
                             <div id="user-menu" class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                <a href="./profile.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-0">
+                                <a href="./profile.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-0 <?php echo ($current_page === 'profile.php') ? 'border-l-4 border-white bg-zinc-800 text-white' : 'border-transparent'; ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                     </svg>
                                     Profile
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                                    </svg>
-                                    Commande
-                                </a>
-                                <a href="#" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                    Paramétre
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                                </svg>
+                                    Favoris
                                 </a>
                                 <a href="./logout.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
@@ -184,101 +223,68 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
-                <?php else : ?>
-                    <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6 ml-5">
-                        <?php if ($adminLoggedIn) : ?>
-                            <div class="relative ml-8">
-                                <div>
-                                    <button id="user-menu-button" type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-expanded="false" aria-haspopup="true">
-                                        <span class="absolute -inset-1.5"></span>
-                                        <span class="sr-only">Open user menu</span>
-                                        <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                                    </button>
-                                </div>
-                                <div id="user-menu" class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                    <a href="./profile.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                                        </svg>
-                                        Profile
-                                    </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 01.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 01.5 0Z" />
-                                        </svg>
-                                        Commande
-                                    </a>
-                                    <a href="./logout.php" class="block px-4 py-2 text-sm text-slate-100 hover:bg-black flex items-center gap-2" role="menuitem" tabindex="-1" id="user-menu-item-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-                                        </svg>
-                                        Déconnexion
-                                    </a>
-                                </div>
-                            </div>
                         <?php else : ?>
                             <a href="./login.php" class="text-sm font-medium text-slate-100 hover:text-gray-800">Connexion</a>
                             <span class="h-6 w-px bg-gray-200" aria-hidden="true"></span>
                             <a href="./register.php" class="text-sm font-medium text-slate-100 hover:text-gray-800">Inscription</a>
                         <?php endif; ?>
+                        </div>
+                        <?php endif; ?>
                     </div>
+                </div>
 
-                <?php endif; ?>
+                <!-- Menu mobile -->
+                <div id="mobile-menu" class="hidden lg:hidden">
+                    <div class="pt-2 pb-3 space-y-1 bg-black"> <!-- Fond du menu mobile sombre -->
+                        <a href="./index.php" class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium text-gray-300 hover:text-gray-100 hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-gray-100 <?php echo ($current_page === 'index.php') ? 'border-l-4 border-white bg-zinc-800 text-white' : 'border-transparent'; ?>">
+                            Accueil
+                        </a>
+                        <?php if ($adminLoggedIn) : ?>
+                        <a href="./dashboard.php" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-300 hover:text-gray-100 hover:bg-gray-700 focus:bg-gray-700 focus:text-gray-100 <?php echo ($current_page === 'dashboard.php') ? 'border-l-4 border-white bg-zinc-800 text-white' : 'border-transparent'; ?>">
+                            Dashboard
+                        </a>
+                        <?php endif; ?>
+                        <a href="./shop.php" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-300 hover:text-gray-100 hover:bg-gray-700 focus:bg-gray-700 focus:text-gray-100 <?php echo ($current_page === 'shop.php') ? 'border-l-4 border-white bg-zinc-800 text-white' : 'border-transparent'; ?>">
+                            Tous les produits
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <!-- Menu mobile -->
-        <div id="mobile-menu" class="hidden lg:hidden">
-            <div class="pt-2 pb-3 space-y-1 bg-black"> <!-- Fond du menu mobile sombre -->
-                <a href="./index.php" class="block pl-3 pr-4 py-2 border-l-4 border-indigo-500 text-base font-medium text-gray-300 hover:text-gray-100 hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-gray-100">Accueil</a>
-                <?php if ($adminLoggedIn) : ?>
-                    <a href="./dashboard.php" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-300 hover:text-gray-100 hover:bg-gray-700 focus:bg-gray-700 focus:text-gray-100">Dashboard</a>
-                <?php endif; ?>
-                <a href="./shop.php" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-300 hover:text-gray-100 hover:bg-gray-700 focus:bg-gray-700 focus:text-gray-100">Tous les produits</a>
-            </div>
-        </div>
-    </div>
-</nav>
-
+        </nav>
     </header>
 
 
-  <body class="bg-stone-800">
-
-
-
-<!-- Modal de barre de recherche -->
-<div id="search-modal" class="fixed inset-0 z-50 mt-32 flex items-center justify-center hidden bg-black bg-opacity-50">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
-        <!-- Formulaire de recherche avec icône loupe -->
-        <!-- Formulaire de recherche avec icône loupe -->
-<!-- Formulaire de recherche avec icône loupe -->
-<form action="#" method="GET" class="flex items-center bg-black text-end rounded-lg border border-gray-300 flex-col p-4">
-    <div class="relative flex w-full">
-        <input type="text" id="search-input" class="bg-black text-white text-sm rounded-lg pl-10 pr-3.5 py-2.5 w-full" placeholder="Rechercher...">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
+<body class="bg-stone-800 relative">
+    
+    <!-- Modal de barre de recherche -->
+    <div id="search-modal" class="fixed inset-0 z-50 mt-0 flex items-center justify-center hidden bg-black bg-opacity-50 border border-gray-300">
+        <div class="rounded-sm w-full max-w-md">
+            <!-- Formulaire de recherche avec icône loupe -->
+            <form action="#" method="GET" class="flex items-center bg-neutral-800 text-end rounded-lg border border-gray-300 flex-col p-4">
+                <div class="relative flex w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 absolute top-3 left-3 text-white">
+                        <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd" />
+                    </svg>
+                    <input type="text" id="search-input" class="bg-stone-900 text-white text-sm rounded-lg pl-10 pr-3.5 py-2.5 w-full" placeholder="Rechercher...">
+                    <!-- Bouton pour fermer le modal -->
+                    <button id="close-search-modal" class="absolute right-0 m-3 text-gray-600 hover:text-gray-800 focus:outline-none">
+                        <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <button id="suggestions-list" class="mt-3 w-full text-white rounded-lg">
+                    <p class="text-white p-2 text-center">
+                        Aucune résultat
+                    </p>
+                </button>
+            </form>
         </div>
     </div>
-    <div id="suggestions-list" class="mt-3 w-full bg-gray-800 text-white rounded-lg shadow-lg">
-        <p class="text-gray-300 p-2 text-center">Aucune résultat</p>
-    </div>
-</form>
-         <!-- Bouton pour fermer le modal -->
-         <button id="close-search-modal" class="absolute top-0 right-0 m-3 text-gray-600 hover:text-gray-800 focus:outline-none">
-            <svg class="h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-            </svg>
-        </button>
-    </div>
-</div>
 
 
 
-<!-- Script pour ouvrir/fermer le modal -->
+<!-- Script pour ouvrir/fermer le modal de recherche -->
 <script>
     const openModalButton = document.getElementById('open-search-modal');
     const closeModalButton = document.getElementById('close-search-modal');
@@ -377,14 +383,16 @@ document.addEventListener('DOMContentLoaded', function() {
             suggestionsList.innerHTML = '<p class="text-gray-500 p-2 text-center">Aucune suggestion trouvée</p>';
         } else {
             const items = suggestions.map(item => `
-                <button type="button" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white" data-product-id="${item.id_produit}">
-                    <div class="flex justify-between items-center">
-                        <span>${item.nom}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-                        </svg>
-                    </div>
-                </button>
+                <div data-product-id="${item.id_produit}" class="mb-2">
+                    <button type="button" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-500 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span>${item.nom}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                            </svg>
+                        </div>
+                    </button>
+                </div>
             `).join('');
             suggestionsList.innerHTML = items;
         }

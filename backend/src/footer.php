@@ -1,7 +1,7 @@
 
 
 
-<footer class="bg-black border-t border-gray-200">
+<footer class="bg-black border-t border-gray-200 relative bottom-0 w-full">
     <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div class="md:flex md:justify-between">
           <div class="mb-6 md:mb-0">
@@ -85,24 +85,8 @@
     </div>
 </footer>
 
-
-
-<script src="../../frontend/src/assets/scripts/modal.js"></script>
-
-<!-- Btn dropdon -->
-<script>
-$(document).ready(function() {
-    $('#user-menu-button').on('click', function() {
-        $('#user-dropdown').toggleClass('hidden');
-    });
-
-    $(document).on('click', function(e) {
-        if (!$(e.target).closest('#user-menu-button, #user-dropdown').length) {
-            $('#user-dropdown').addClass('hidden');
-        }
-    });
-});
-</script>
+<!-- Inclure les scripts Magic UI si nécessaire -->
+<script src="https://path-to-magicui-scripts.js"></script>
 
 <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -177,5 +161,9 @@ $(document).ready(function() {
             }
         });
     </script>
+
+
+
+
 
 </html>

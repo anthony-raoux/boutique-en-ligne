@@ -11,10 +11,13 @@ require_once 'controllers/ProductController.php';
 
 $productController = new ProductController();
 
-// Charger les catégories existantes si elles ne sont pas déjà en session
-if (!isset($_SESSION['categories'])) {
-    $result = $productController->getCategories();
-    $_SESSION['categories'] = $result['categories'] ?? [];
+// Récupérer toutes les catégories
+$resultCategories = $productController->getCategories();
+$categories = $resultCategories['categories'] ?? [];
+
+// Vérifier les erreurs de récupération des catégories
+if (isset($resultCategories['success']) && !$resultCategories['success']) {
+    echo "Erreur lors de la récupération des catégories : " . $resultCategories['error'];
 }
 
 // Message d'erreur ou de succès lors des opérations
@@ -33,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result['success']) {
             $message = "Catégorie ajoutée avec succès.";
             // Mettre à jour la liste des catégories après l'ajout
-            $categories = $productController->getCategories();
-            $_SESSION['categories'] = $categories['categories'] ?? [];
+            $resultCategories = $productController->getCategories();
+            $categories = $resultCategories['categories'] ?? [];
         } else {
             $message = "Erreur lors de l'ajout de la catégorie: " . $result['error'];
         }
@@ -50,15 +53,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result['success']) {
             $message = "Catégorie supprimée avec succès.";
             // Mettre à jour la liste des catégories après la suppression
-            $categories = $productController->getCategories();
-            $_SESSION['categories'] = $categories['categories'] ?? [];
+            $resultCategories = $productController->getCategories();
+            $categories = $resultCategories['categories'] ?? [];
         } else {
             $message = "Erreur lors de la suppression de la catégorie: " . $result['error'];
         }
     }
-}
 
-$categories = $_SESSION['categories'];
+    // Mise à jour d'une catégorie
+    if (isset($_POST['updateCategory'])) {
+        $idCategorie = intval($_POST['id_categorie']);
+        $nomCategorie = htmlspecialchars($_POST['nom_categorie']);
+        $idParentCategorie = isset($_POST['id_parent_categorie']) ? intval($_POST['id_parent_categorie']) : null;
+
+        // Appel à la méthode du contrôleur pour mettre à jour la catégorie
+        $result = $productController->updateCategory($idCategorie, $nomCategorie, $idParentCategorie);
+
+        if ($result['success']) {
+            $message = "Catégorie mise à jour avec succès.";
+            // Mettre à jour la liste des catégories après la mise à jour
+            $resultCategories = $productController->getCategories();
+            $categories = $resultCategories['categories'] ?? [];
+        } else {
+            $message = "Erreur lors de la mise à jour de la catégorie: " . $result['error'];
+        }
+    }
+}
 
 include 'head.php';
 include 'navbar.php';
@@ -84,6 +104,43 @@ include 'navbar.php';
                 </div>
             </div>
         </section>
+
+
+
+          <!-- Liste des catégories existantes -->
+        <div class="bg-black text-white p-6 rounded-lg my-6">
+            <h2 class="text-2xl font-bold mb-4 text-white">Liste des catégories</h2>
+            <?php if (empty($categories)) : ?>
+                <p>Aucune catégorie trouvée.</p>
+            <?php else : ?>
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2">Nom</th>
+                            <th class="px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($categories as $categorie) : ?>
+                            <tr>
+                                <td class="border px-4 py-2"><?php echo htmlspecialchars($categorie['nom'] ?? ''); ?></td>
+                                <td class="border px-4 py-2">
+                                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" style="display:inline;">
+                                        <input type="hidden" name="id_categorie" value="<?php echo htmlspecialchars($categorie['id_categorie']); ?>">
+                                        <button type="submit" name="deleteCategory" class="bg-red-500 text-white px-4 py-2 rounded">Supprimer</button>
+                                    </form>
+                                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" style="display:inline;">
+                                        <input type="hidden" name="id_categorie" value="<?php echo htmlspecialchars($categorie['id_categorie']); ?>">
+                                        <input type="text" name="nom_categorie" value="<?php echo htmlspecialchars($categorie['nom']); ?>" required>
+                                        <button type="submit" name="updateCategory" class="bg-yellow-500 text-white px-4 py-2 rounded">Modifier</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
         
    
 <?php include_once 'footer.php'; ?>

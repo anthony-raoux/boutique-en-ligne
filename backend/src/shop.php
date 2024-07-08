@@ -49,19 +49,19 @@ include_once 'navbar.php';
                 <!-- oui 7 -->
                 <p class="mb-4 text-sm text-red-500"><?php echo htmlspecialchars($message); ?></p>
             <?php endif; ?>
-            <!-- oui 3 -->
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- oui 8 -->
+
                 <?php if (empty($products)): ?>
                     <p class="col-span-full text-center text-gray-500">Aucun produit disponible pour le moment.</p>
                 <?php else: ?>
-                    <!-- oui 4 -->
+
                     <?php foreach ($products as $product): ?>
-                        <!-- oui 9 -->
-                        <div class="product cursor-pointer bg-black text-white border border-gray-500 rounded p-6 flex flex-col items-center" data-id="<?php echo $product['id_produit']; ?>">
-                            <!-- oui 10 -->
+
+                        <div class="product bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center hover:bg-gray-100 transition duration-300" data-id="<?php echo htmlspecialchars($product['id_produit']); ?>">
+
                             <h2 class="text-xl font-bold mb-4"><?php echo htmlspecialchars($product['nom']); ?></h2>
-                            <!-- oui 11 -->
+
                             <?php if (!empty($product['image'])): ?>
                                 <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" class="w-full h-48 object-cover rounded-md mb-4"/>
                             <?php else: ?>
@@ -77,58 +77,11 @@ include_once 'navbar.php';
         include_once 'footer.php';
     ?>
 
-    <!-- Modal -->
-    <div id="productModal" class="fixed inset-0 hidden z-10 overflow-y-auto">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-                <div class="block absolute top-0 right-0 pt-4 pr-4">
-                    <button type="button" class="text-gray-400 hover:text-gray-500" id="closeModal">
-                        <span class="sr-only">Fermer</span>
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="sm:flex sm:items-start">
-                    <div class="mt-3 text-center sm:mt-0 sm:text-left">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle"></h3>
-                        <div class="mt-2">
-                            <p class="text-sm text-gray-500" id="modalContent"></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm" id="closeModalButton">Fermer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    
-
-    <script>
+<script>
         document.querySelectorAll('.product').forEach(product => {
             product.addEventListener('click', function() {
                 const productId = this.getAttribute('data-id');
-                fetch(`details.php?product_id=${encodeURIComponent(productId)}`)
-                    .then(response => response.text())
-                    .then(data => {
-                        document.getElementById('modalContent').innerHTML = data;
-                        document.getElementById('productModal').classList.remove('hidden');
-                    });
+                window.location.href = 'details.php?product_id=' + encodeURIComponent(productId);
             });
-        });
-
-        document.getElementById('closeModal').addEventListener('click', () => {
-            document.getElementById('productModal').classList.add('hidden');
-        });
-
-        document.getElementById('closeModalButton').addEventListener('click', () => {
-            document.getElementById('productModal').classList.add('hidden');
         });
     </script>

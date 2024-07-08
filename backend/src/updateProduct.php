@@ -77,7 +77,6 @@ include 'navbar.php';
 ?>
 
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-center mb-8">Modifier un produit</h1>
 
     <?php if (!empty($message)) : ?>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
@@ -85,39 +84,70 @@ include 'navbar.php';
         </div>
     <?php endif; ?>
 
-    <!-- Update product form -->
-    <div class="bg-white p-8 rounded-lg shadow-md">
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'] . '?id_produit=' . $productId); ?>" method="post" enctype="multipart/form-data">
-            <div class="mb-4">
-                <label for="nom" class="block text-gray-700">Nom:</label>
-                <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($product['nom']); ?>" class="w-full px-3 py-2 border rounded" required>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center text-white mb-8">Modifier un produit</h1>
+
+        <?php if (!empty($message)) : ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+                <?php echo $message; ?>
             </div>
-            <div class="mb-4">
-                <label for="description" class="block text-gray-700">Description:</label>
-                <textarea id="description" name="description" rows="4" class="w-full px-3 py-2 border rounded" required><?php echo htmlspecialchars($product['description']); ?></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="prix" class="block text-gray-700">Prix:</label>
-                <input type="number" id="prix" name="prix" step="0.01" value="<?php echo htmlspecialchars($product['prix']); ?>" class="w-full px-3 py-2 border rounded" required>
-            </div>
-            <div class="mb-4">
-                <label for="image" class="block text-gray-700">Image:</label>
-                <input type="file" id="image" name="image" class="w-full px-3 py-2 border rounded">
-                <?php if ($product['image']) : ?>
-                    <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" class="mt-4 w-24 h-24 object-cover">
-                <?php endif; ?>
-            </div>
-            <div class="mb-4">
-                <label for="stock" class="block text-gray-700">Stock:</label>
-                <input type="number" id="stock" name="stock" value="<?php echo htmlspecialchars($product['stock']); ?>" class="w-full px-3 py-2 border rounded" required>
-            </div>
-            <div class="mb-4">
-                <label for="id_categorie" class="block text-gray-700">Catégorie:</label>
-                <input type="number" id="id_categorie" name="id_categorie" value="<?php echo htmlspecialchars($product['id_categorie']); ?>" class="w-full px-3 py-2 border rounded" required>
-            </div>
-            <button type="submit" name="updateProduct" class="bg-blue-500 text-white px-4 py-2 rounded">Mettre à jour</button>
-        </form>
+        <?php endif; ?>
+
+        <!-- Update product form -->
+        <div class="p-8 rounded-lg">
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'] . '?id_produit=' . $productId); ?>" method="post" enctype="multipart/form-data">
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold leading-6 text-white">Détails du Produit</h3>
+                    <p class="mt-1 text-sm text-gray-400">Modifiez les informations du produit.</p>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div class="text-sm font-medium leading-6 text-white">Nom:</div>
+                        <div class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($product['nom']); ?>" class="w-full bg-stone-900 text-white px-3 py-2 border rounded">
+                        </div>
+                    </div>
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div class="text-sm font-medium leading-6 text-white">Description:</div>
+                        <div class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <textarea id="description" name="description" rows="4" class="w-full px-3 py-2 border bg-stone-900 text-white rounded"><?php echo htmlspecialchars($product['description']); ?></textarea>
+                        </div>
+                    </div>
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div class="text-sm font-medium leading-6 text-white">Prix:</div>
+                        <div class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <input type="number" id="prix" name="prix" step="0.01" value="<?php echo htmlspecialchars($product['prix']); ?>" class="w-full bg-stone-900 text-white px-3 py-2 border rounded">
+                        </div>
+                    </div>
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div class="text-sm font-medium leading-6 text-white">Image:</div>
+                        <div class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <input type="file" id="image" name="image" class="w-full px-3 py-2 bg-stone-900 text-white border rounded">
+                            <?php if ($product['image']) : ?>
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>" class="mt-4 w-24 h-24 object-cover">
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div class="text-sm font-medium leading-6 text-white">Stock:</div>
+                        <div class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <input type="number" id="stock" name="stock" value="<?php echo htmlspecialchars($product['stock']); ?>" class=" bg-stone-900 text-white w-full px-3 py-2 border rounded">
+                        </div>
+                    </div>
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <div class="text-sm font-medium leading-6 text-white">Catégorie:</div>
+                        <div class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <input type="text" id="id_categorie" name="id_categorie" value="<?php echo htmlspecialchars($product['id_categorie']); ?>" class="w-full bg-stone-900 text-white px-3 py-2 border rounded">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <button type="submit" name="updateProduct" class="bg-black hover:bg-white hover:text-black text-white px-4 py-2 rounded mt-10 w-2/4">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-</body>
-</html>
+<?php
+    require_once 'footer.php';
+?>

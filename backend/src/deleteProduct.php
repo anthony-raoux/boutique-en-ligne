@@ -31,8 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteProduct'])) {
     }
 }
 
-include 'head.php';
-include 'navbar.php';
 ?>
 
 
@@ -58,4 +56,3 @@ include 'navbar.php';
             </form>
         </div>
     </div>
-<?php include_once 'footer.php'; ?>

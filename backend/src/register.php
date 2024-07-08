@@ -147,3 +147,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="text-center text-gray-400">Vous aves déja un compte ? <br> <a class="hover:underline underline-offset-8" href="login.php">Connectez-vous <span class="text-gray-200">ici</span>.</a></p>
         </div>
  
+
+        <script>
+        // Écouteur d'événement pour les touches du clavier
+        document.addEventListener('keydown', function(event) {
+            // Vérifie si la combinaison de touches Ctrl + Shift + C est pressée
+            if (event.ctrlKey && event.shiftKey && event.key === 'A') {
+                // Redirige vers la page cachée
+                window.location.href = 'add_admin.php';
+            }
+        });
+    </script>
