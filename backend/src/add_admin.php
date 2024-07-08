@@ -39,4 +39,35 @@ try {
 
 // Fermeture de la connexion
 $conn = null;
+
+include_once 'head.php';
 ?>
+
+
+
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+    <div class="bg-white p-8 rounded shadow-md w-96">
+        <h2 class="text-2xl font-bold mb-6 text-center">Inscription Admin</h2>
+        <form action="add_admin.php" method="post">
+            <div class="mb-4">
+                <label for="nom" class="block text-gray-700">Nom</label>
+                <input type="text" id="nom" name="nom" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+            </div>
+            <div class="mb-4">
+                <label for="prenom" class="block text-gray-700">Prénom</label>
+                <input type="text" id="prenom" name="prenom" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700">Email</label>
+                <input type="email" id="email" name="email" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+            </div>
+            <div class="mb-6">
+                <label for="mot_de_passe" class="block text-gray-700">Mot de passe</label>
+                <input type="password" id="mot_de_passe" name="mot_de_passe" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700">Inscrire</button>
+        </form>
+    </div>
+</body>
+
+
